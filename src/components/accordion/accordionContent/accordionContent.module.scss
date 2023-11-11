@@ -1,0 +1,16 @@
+.root {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 200ms,
+    padding-bottom 200ms;
+
+  &--open {
+    grid-template-rows: 1fr;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.inner {
+  overflow: hidden;
+}

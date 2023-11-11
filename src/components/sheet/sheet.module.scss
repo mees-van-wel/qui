@@ -1,0 +1,81 @@
+.root {
+    margin: 50px;
+
+  &__title-wrapper {
+    transition: border-radius 100ms;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    // TODO Fix this
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    .root--open & {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .root--default & {
+      padding-right: 0 !important;
+    }
+  }
+
+  &__title {
+    // padding-top: 1rem;
+    // padding-bottom: 1rem;
+  }
+
+  &__button {
+    transition: border-bottom-right-radius 100ms;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+
+    .root--open & {
+      border-bottom-right-radius: 0 !important;
+    }
+
+    &__inner {
+      position: relative;
+    }
+  }
+
+  &__icon {
+    transition: opacity 100ms;
+
+    &-open {
+      .root--open & {
+        opacity: 0;
+      }
+    }
+
+    &-close {
+      opacity: 0;
+      position: absolute;
+      inset: 0;
+
+      .root--open & {
+        opacity: 100;
+      }
+    }
+  }
+
+  &__content {
+    border-top-left-radius: 0 !important;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+      opacity 100ms,
+      grid-template-rows 100ms,
+      padding 100ms;
+
+    .root--open & {
+      grid-template-rows: 1fr;
+    }
+
+    .root--closed & {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      opacity: 0;
+    }
+  }
+}

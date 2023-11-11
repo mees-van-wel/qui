@@ -1,0 +1,75 @@
+@import "modern-normalize/modern-normalize.css";
+@import "open-color/open-color.css";
+
+:root {
+  --qui-color-lightest: #fff;
+  --qui-color-lighter: #e9e9e7;
+  --qui-color-light: #dededb;
+  --qui-color-neutral: #7f7f7f;
+  --qui-color-dark: #212124;
+  --qui-color-darker: #161618;
+  --qui-color-darkest: #000;
+
+  --qui-color-primary-0: var(--oc-blue-0);
+  --qui-color-primary-1: var(--oc-blue-1);
+  --qui-color-primary-2: var(--oc-blue-2);
+  --qui-color-primary-3: var(--oc-blue-3);
+  --qui-color-primary-4: var(--oc-blue-4);
+  --qui-color-primary-5: var(--oc-blue-5);
+  --qui-color-primary-6: var(--oc-blue-6);
+  --qui-color-primary-7: var(--oc-blue-7);
+  --qui-color-primary-8: var(--oc-blue-8);
+  --qui-color-primary-9: var(--oc-blue-9);
+
+  --qui-scale: 1;
+
+  --qui-h1-font-size: calc(2.125rem * var(--qui-scale));
+  --qui-h1-line-height: 1.3;
+  --qui-h1-font-weight: 700;
+  --qui-h2-font-size: calc(1.625rem * var(--qui-scale));
+  --qui-h2-line-height: 1.35;
+  --qui-h2-font-weight: 700;
+  --qui-h3-font-size: calc(1.375rem * var(--qui-scale));
+  --qui-h3-line-height: 1.4;
+  --qui-h3-font-weight: 700;
+  --qui-h4-font-size: calc(1.125rem * var(--qui-scale));
+  --qui-h4-line-height: 1.45;
+  --qui-h4-font-weight: 700;
+  --qui-h5-font-size: calc(1rem * var(--qui-scale));
+  --qui-h5-line-height: 1.5;
+  --qui-h5-font-weight: 700;
+  --qui-h6-font-size: calc(0.875rem * var(--qui-scale));
+  --qui-h6-line-height: 1.5;
+  --qui-h6-font-weight: 700;
+}
+
+body {
+  --qui-color-background: var(--qui-color-light);
+  --qui-color-background-inverted: var(--qui-color-dark);
+  --qui-color-midground: var(--qui-color-lighter);
+  --qui-color-midground-inverted: var(--qui-color-darker);
+  --qui-color-foreground: var(--qui-color-lightest);
+  --qui-color-foreground-inverted: var(--qui-color-darkest);
+  --qui-color-text: var(--qui-color-darkest);
+  --qui-color-text-inverted: var(--qui-color-lightest);
+
+  background-color: var(--qui-color-background);
+  color: var(--qui-color-text);
+
+  &[data-theme="dark"] {
+    --qui-color-background: var(--qui-color-dark);
+    --qui-color-background-inverted: var(--qui-color-light);
+    --qui-color-midground: var(--qui-color-darker);
+    --qui-color-midground-inverted: var(--qui-color-lighter);
+    --qui-color-foreground: var(--qui-color-darkest);
+    --qui-color-foreground-inverted: var(--qui-color-lightest);
+    --qui-color-text: var(--qui-color-lightest);
+    --qui-color-text-inverted: var(--qui-color-darkest);
+
+    color-scheme: dark;
+  }
+}
+
+p {
+  margin: 0;
+}

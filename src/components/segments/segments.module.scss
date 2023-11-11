@@ -1,0 +1,91 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  border-radius: calc(var(--qui-segments-size) / 4);
+  width: 100%;
+  background-color: var(--qui-color-background);
+
+  &--vertical {
+    flex-direction: column;
+  }
+}
+
+.overlay {
+  position: absolute;
+  border-radius: calc(var(--qui-segments-size) / 4);
+  background-color: var(--qui-color-6);
+  transition:
+    top 200ms,
+    left 200ms;
+  width: var(--qui-segments-overlay-width);
+  height: var(--qui-segments-overlay-height);
+  top: var(--qui-segments-overlay-top);
+  left: calc(
+    var(--qui-segments-overlay-left) + (var(--qui-segments-size) / 8 - 1px) / 2
+  );
+
+  .root--vertical & {
+    top: calc(
+      var(--qui-segments-overlay-top) + (var(--qui-segments-size) / 8 - 1px) / 2
+    );
+    left: var(--qui-segments-overlay-left);
+  }
+
+  :global(body[data-theme="dark"]) & {
+    background-color: var(--qui-color-8);
+  }
+}
+
+.segment {
+  width: 100%;
+  white-space: nowrap;
+  background-color: transparent;
+  cursor: pointer;
+  z-index: 1;
+  font-size: var(--qui-segments-size);
+  padding: calc(var(--qui-segments-size) / 2) var(--qui-segments-size);
+  color: rgb(from var(--qui-color-text) r g b / 60%);
+  transition:
+    color 100ms,
+    border-color 100ms,
+    font-variation-settings 0.3s ease;
+  border: none;
+  border-left: solid calc(var(--qui-segments-size) / 8 - 1px)
+    rgb(from var(--qui-color-text) r g b / 60%);
+
+  &:hover:not(:disabled) {
+    color: var(--qui-color-text);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: rgb(from var(--qui-color-text) r g b / 20%);
+  }
+
+  &:first-child {
+    border-radius: calc(var(--qui-segments-size) / 4) 0 0
+      calc(var(--qui-segments-size) / 4);
+    border-color: transparent !important;
+  }
+
+  &:last-child {
+    border-radius: 0 calc(var(--qui-segments-size) / 4)
+      calc(var(--qui-segments-size) / 4) 0;
+  }
+
+  .root--vertical & {
+    border-left: none;
+    border-top: solid calc(var(--qui-segments-size) / 8 - 1px)
+      rgb(from var(--qui-color-text) r g b / 60%);
+    border-radius: 0;
+  }
+
+  &--previous-active {
+    border-color: transparent !important;
+  }
+
+  &--active {
+    border-color: transparent !important;
+    color: white;
+  }
+}

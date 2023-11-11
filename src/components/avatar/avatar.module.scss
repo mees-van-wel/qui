@@ -1,0 +1,23 @@
+.root {
+  display: grid;
+  place-content: center;
+  width: calc(var(--qui-avatar-size) * 3);
+  height: calc(var(--qui-avatar-size) * 3);
+  background-color: var(--qui-color-0);
+  font-size: var(--qui-avatar-size);
+  font-weight: bold;
+  color: var(--qui-color-6);
+  border-radius: calc(var(--qui-avatar-size) * 2.5);
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 1 /1;
+    object-fit: cover;
+    border-radius: calc(var(--qui-avatar-size) * 2.5);
+  }
+
+  :global(body[data-theme="dark"]) & {
+    background-color: rgb(from var(--qui-color-8) r g b / 20%);
+    color: var(--qui-color-2);
+  }
+}

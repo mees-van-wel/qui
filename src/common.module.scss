@@ -1,0 +1,52 @@
+.input {
+  min-height: 2rem;
+  width: 100%;
+  border-radius: 0.25rem;
+  border: solid 1px transparent;
+  background-color: var(--qui-color-background);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  transition: border-color 100ms;
+  box-shadow:
+    inset 2px 2px 2px #adb5bd,
+    inset -2px -2px 2px #f1f3f5;
+
+  :global(body[data-theme="dark"]) & {
+    box-shadow:
+      inset 2px 2px 2px #141517,
+      inset -2px -2px 2px #2c2e33;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--qui-color-primary-6);
+
+    :global(body[data-theme="dark"]) & {
+      border-color: var(--qui-color-primary-8);
+    }
+  }
+
+  &:disabled {
+    background-color:
+      inset 0 0 1.5px #f1f3f5,
+      inset 0 0 1.5px #adb5bd;
+
+    :global(body[data-theme="dark"]) & {
+      box-shadow:
+        inset 0 0 1.5px #2c2e33,
+        inset 0 0 1.5px #141517;
+    }
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+
+  &--error {
+    border-color: var(--oc-red-6);
+
+    :global(body[data-theme="dark"]) & {
+      border-color: var(--oc-red-8);
+    }
+  }
+}

@@ -1,0 +1,60 @@
+.root {
+  width: 100%;
+  height: calc(var(--qui-progress-size) / 2);
+  background-color: var(--qui-color-background);
+  border-radius: calc(var(--qui-progress-size) / 8);
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+
+  &__section {
+    transition: width 100ms;
+    width: var(--qui-progress-section-width);
+    height: 100%;
+    background-color: var(--qui-color-6);
+    display: grid;
+    place-content: center;
+    font-weight: bold;
+    font-size: calc(var(--qui-progress-size) / 3);
+    color: white;
+    // TODO dynamic text color
+
+    &:first-child {
+      border-top-left-radius: calc(var(--qui-progress-size) / 8);
+      border-bottom-left-radius: calc(var(--qui-progress-size) / 8);
+    }
+
+    &:last-child {
+      border-top-right-radius: calc(var(--qui-progress-size) / 8);
+      border-bottom-right-radius: calc(var(--qui-progress-size) / 8);
+    }
+
+    :global(body[data-theme="dark"]) & {
+      background-color: var(--qui-color-8);
+    }
+  }
+
+  &__animation {
+    position: absolute;
+    inset: 0;
+    animation: 1s linear 0s infinite normal none running striped-animation;
+    border-radius: calc(var(--qui-progress-size) / 8);
+    background-size: 1.25rem 1.25rem;
+    background-image: linear-gradient(
+      45deg,
+      rgb(from var(--qui-color-background) r g b / 25%) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgb(from var(--qui-color-background) r g b / 25%) 50%,
+      rgb(from var(--qui-color-background) r g b / 25%) 75%,
+      transparent 75%,
+      transparent
+    );
+  }
+}
+
+@keyframes striped-animation {
+  100% {
+    background-position: 2.5rem 0;
+  }
+}

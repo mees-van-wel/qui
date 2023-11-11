@@ -1,0 +1,112 @@
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--qui-button-size);
+  position: relative;
+  border: calc(var(--qui-button-size) / 8 - 1px) solid transparent;
+  padding: calc(var(--qui-button-size) / 2) var(--qui-button-size);
+  border-radius: calc(var(--qui-button-size) / 4);
+  font-size: var(--qui-button-size);
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 50ms,
+    background-color 100ms,
+    color 100ms,
+    border-color 100ms;
+
+  &:active:not(.root--disabled, .root--loading) {
+    transform: translateY(calc(var(--qui-button-size) / 8));
+  }
+
+  &__loader-wrapper {
+    position: absolute;
+    border-radius: calc(var(--qui-button-size) / 4);
+    inset: calc(-1 * var(--qui-button-size) / 8 + 1px);
+    background-color: rgb(from var(--qui-color-foreground) r g b / 35%);
+    display: grid;
+    place-content: center;
+  }
+
+  &--compact {
+    padding: calc(var(--qui-button-size) / 4) calc(var(--qui-button-size) / 2);
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &--variant {
+    &-filled {
+      background-color: var(--qui-color-6);
+      // TODO change to dynamic value, maybe auto gen (contrast levels)?
+      color: white;
+
+      &:hover {
+        background-color: var(--qui-color-7);
+      }
+
+      :global(body[data-theme="dark"]) & {
+        background-color: var(--qui-color-8);
+
+        &:hover {
+          background-color: var(--qui-color-9);
+        }
+      }
+    }
+
+    &-light {
+      background-color: var(--qui-color-0);
+      color: var(--qui-color-6);
+
+      &:hover {
+        background-color: rgb(from var(--qui-color-1) r g b / 70%);
+      }
+
+      :global(body[data-theme="dark"]) & {
+        background-color: rgb(from var(--qui-color-8) r g b / 20%);
+        color: var(--qui-color-2);
+
+        &:hover {
+          background-color: rgb(from var(--qui-color-7) r g b / 30%);
+        }
+      }
+    }
+
+    &-outline {
+      background-color: transparent;
+      border-color: var(--qui-color-6);
+      color: var(--qui-color-6);
+
+      &:hover {
+        background-color: rgb(from var(--qui-color-0) r g b / 40%);
+      }
+
+      :global(body[data-theme="dark"]) & {
+        border-color: var(--qui-color-5);
+        color: var(--qui-color-5);
+
+        &:hover {
+          background-color: rgb(from var(--qui-color-5) r g b / 10%);
+        }
+      }
+    }
+  }
+
+  &--loading {
+    cursor: not-allowed;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    border-color: transparent !important;
+    background-color: var(--qui-color-neutral) !important;
+    color: var(--qui-color-background) !important;
+
+    &:hover {
+      background-color: var(--qui-color-neutral) !important;
+    }
+  }
+}

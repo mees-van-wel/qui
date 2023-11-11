@@ -1,0 +1,20 @@
+.root {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  padding: 1rem 0 0.5rem 0;
+  font-weight: bold;
+}
+
+.icon {
+  transition: transform 200ms;
+
+  .root--active & {
+    transform: rotate(180deg);
+  }
+}

@@ -1,0 +1,36 @@
+.label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+.asterisk {
+  margin-left: 0.25rem;
+  color: var(--oc-red-6);
+
+  :global(body[data-theme="dark"]) & {
+    color: var(--oc-red-8);
+  }
+}
+
+.description {
+  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--qui-color-neutral);
+}
+
+.inner {
+  position: relative;
+  display: flex;
+}
+
+.error {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--oc-red-6);
+  font-weight: bold;
+
+  :global(body[data-theme="dark"]) & {
+    color: var(--oc-red-8);
+  }
+}

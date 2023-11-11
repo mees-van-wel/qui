@@ -1,0 +1,6 @@
+.root {
+  background-color: var(--qui-color-swatch-color);
+  width: calc(var(--qui-color-swatch-size) * 1.5);
+  height: calc(var(--qui-color-swatch-size) * 1.5);
+  border-radius: var(--qui-color-swatch-size);
+}

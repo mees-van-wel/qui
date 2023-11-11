@@ -1,0 +1,13 @@
+.root {
+  font-size: var(--qui-loader-size);
+  color: var(--color-6);
+
+  :global(body[data-theme="dark"]) & {
+    color: var(--qui-color-8);
+  }
+
+  &--color-current {
+    // TODO Find a way that it overrides dark mode
+    color: currentColor !important;
+  }
+}

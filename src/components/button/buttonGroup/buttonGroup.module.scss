@@ -1,0 +1,29 @@
+.root {
+  --qui-button-group-border-color: rgb(from var(--qui-color-primary-4) r g b / 60%);
+
+  :global(body[data-theme="dark"]) & {
+    --qui-button-group-border-color: rgb(from var(--qui-color-primary-6) r g b / 60%);
+  }
+
+  & > :first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-color: var(--qui-button-group-border-color);
+    margin-right: -1px;
+  }
+
+  & > :last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-color: var(--qui-button-group-border-color);
+    margin-left: -1px;
+  }
+
+  & > :not(:first-child):not(:last-child) {
+    border-radius: 0;
+    border-left-color: var(--qui-button-group-border-color);
+    border-right-color: var(--qui-button-group-border-color);
+    margin-left: -1px;
+    margin-right: -1px;
+  }
+}

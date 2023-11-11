@@ -1,0 +1,8 @@
+.root {
+  width: max-content;
+  position: absolute;
+  opacity: var(--qui-floater-opacity);
+  z-index: var(--qui-floater-z-index);
+  left: var(--qui-floater-left);
+  top: var(--qui-floater-top);
+}

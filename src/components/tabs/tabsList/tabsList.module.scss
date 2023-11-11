@@ -1,0 +1,10 @@
+.root {
+  display: flex;
+  border-bottom: solid 1px var(--qui-color-neutral);
+
+  &--vertical {
+    flex-direction: column;
+    border-bottom: none;
+    border-right: solid 1px var(--qui-color-neutral);
+  }
+}

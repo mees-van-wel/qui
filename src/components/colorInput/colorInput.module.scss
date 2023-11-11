@@ -1,0 +1,23 @@
+.root {
+  position: relative;
+
+  &__color-input {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0;
+  }
+
+  &__text-input {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+
+  &__color-swatch {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

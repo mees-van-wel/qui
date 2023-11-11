@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: var(--qui-group-align);
+  justify-content: var(--qui-group-justify);
+  flex-wrap: var(--qui-group-wrap);
+  gap: var(--qui-group-gap);
+
+  &--grow {
+    & > * {
+      flex-grow: 1;
+    }
+  }
+}

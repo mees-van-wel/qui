@@ -1,0 +1,7 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--qui-stack-align);
+  justify-content: var(--qui-stack-justify);
+  gap: var(--qui-stack-gap);
+}

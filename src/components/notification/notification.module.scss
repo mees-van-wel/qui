@@ -1,0 +1,43 @@
+.root {
+  --qui-notifaction-color: var(--qui-color-6);
+  --qui-notifaction-color-shade: rgb(
+    from var(--qui-notifaction-color) r g b / 50%
+  );
+
+  border-radius: 1rem;
+  background-color: var(--qui-notifaction-color-shade);
+  padding: 0.5rem;
+  border: 0.1rem solid var(--qui-notifaction-color);
+  border-radius: 0.25rem;
+  box-shadow:
+    -1px 1px 3px 0 var(--qui-notifaction-color-shade),
+    -1px 1px 2px -1px var(--qui-notifaction-color-shade);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+
+  :global(body[data-theme="dark"]) & {
+    --qui-notifaction-color: var(--qui-color-8);
+  }
+
+  &__icon-wrapper {
+    background-color: var(--qui-notifaction-color);
+    width: 1.5rem;
+    height: 1.5rem;
+    display: grid;
+    place-content: center;
+    border-radius: 1rem;
+
+    & > svg {
+      color: white;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  &__title {
+    font-weight: bold;
+    margin: 0;
+  }
+}

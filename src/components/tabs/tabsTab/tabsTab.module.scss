@@ -1,0 +1,43 @@
+.root {
+  position: relative;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--qui-color-neutral);
+  }
+
+  &--horizontal {
+    border-bottom: solid 1px var(--qui-color-neutral);
+    border-radius: 0.25rem 0.25rem 0 0;
+    margin-bottom: -1px;
+  }
+
+  &--vertical {
+    border-right: solid 1px var(--qui-color-neutral);
+    border-radius: 0.25rem 0 0 0.25rem;
+    margin-right: -1px;
+  }
+
+  &--active {
+    border-left: solid 1px var(--qui-color-neutral);
+    border-top: solid 1px var(--qui-color-neutral);
+
+    &.root--horizontal {
+      border-right: solid 1px var(--qui-color-neutral);
+      margin-left: -1px;
+      margin-right: -1px;
+      border-bottom-color: var(--qui-color-foreground);
+    }
+
+    &.root--vertical {
+      border-bottom: solid 1px var(--qui-color-neutral);
+      margin-top: -1px;
+      margin-bottom: -1px;
+      border-right-color: var(--qui-color-foreground);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+.root {
+  background-color: var(--qui-paper-background-color);
+  border-radius: 1.25rem;
+  padding: 1rem;
+
+  &--glass {
+    background-color: rgb(from var(--qui-paper-background-color) r g b / 50%);
+    backdrop-filter: saturate(1.5), blur(8px);
+  }
+
+  &--no-padding {
+    padding: 0;
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+}

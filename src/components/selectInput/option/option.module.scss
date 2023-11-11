@@ -1,0 +1,15 @@
+.root {
+  display: block;
+  width: 100%;
+  user-select: none;
+  padding: 0.25rem 0.5rem;
+  background-color: transparent;
+  border: none;
+  transition: background-color 100ms;
+  cursor: pointer;
+
+  :hover {
+    // background-color:
+  }
+}
+// " hover:bg-primary-6/80 hover:text-white dark:hover:bg-primary-8/80",

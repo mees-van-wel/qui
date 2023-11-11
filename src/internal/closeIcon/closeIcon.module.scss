@@ -1,0 +1,16 @@
+.root {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: color 100ms;
+
+  &:hover {
+    color: var(--oc-red-6);
+
+    :global(body[data-theme="dark"]) & {
+      color: var(--oc-red-8);
+    }
+  }
+}

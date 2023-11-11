@@ -1,0 +1,65 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--qui-badge-size);
+  border: calc(var(--qui-badge-size) / 8 - 1px) solid transparent;
+  border-radius: var(--qui-badge-size);
+  font-size: var(--qui-badge-size);
+  padding: calc(var(--qui-badge-size) / 4) var(--qui-badge-size);
+  font-weight: bold;
+
+  &__dot {
+    height: calc(var(--qui-badge-size) / 2);
+    width: calc(var(--qui-badge-size) / 2);
+    border-radius: var(--qui-badge-size);
+    background-color: var(--qui-color-7);
+  }
+
+  &__inner {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &--variant {
+    &-filled {
+      background-color: var(--qui-color-6);
+      // TODO change to dynamic value, maybe auto gen (contrast levels)?
+      color: white;
+
+      :global(body[data-theme="dark"]) & {
+        background-color: var(--qui-color-8);
+      }
+    }
+
+    &-light {
+      background-color: var(--qui-color-0);
+      color: var(--qui-color-6);
+
+      :global(body[data-theme="dark"]) & {
+        background-color: rgb(from var(--qui-color-8) r g b / 20%);
+        color: var(--qui-color-2);
+      }
+    }
+
+    &-outline {
+      background-color: transparent;
+      border-color: var(--qui-color-6);
+      color: var(--qui-color-6);
+
+      :global(body[data-theme="dark"]) & {
+        border-color: var(--qui-color-5);
+        color: var(--qui-color-5);
+      }
+    }
+
+    &-dot {
+      background-color: var(--qui-color-foreground);
+      border-color: rgb(from var(--qui-color-7) r g b / 50%);
+    }
+  }
+}
