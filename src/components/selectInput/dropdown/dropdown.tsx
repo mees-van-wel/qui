@@ -12,10 +12,10 @@ import { Paper } from "~/components/paper";
 import clsx from "clsx";
 import classes from "./dropdown.module.scss";
 
-interface DropdownProps {
+export type DropdownProps = {
   ref?: Signal<HTMLDivElement | undefined>;
   onClick$?: (value: SelectValue | SelectValue[]) => void;
-}
+};
 
 export const Dropdown = component$<DropdownProps>(({ ref, onClick$ }) => {
   const { classNames, styles, filteredOptions, searchValue } =

@@ -1,0 +1,26 @@
+.root {
+  transition: width 100ms;
+  width: var(--qui-progress-section-width);
+  height: 100%;
+  background-color: var(--qui-color-6);
+  display: grid;
+  place-content: center;
+  font-weight: bold;
+  font-size: calc(var(--qui-progress-size) / 2.5);
+  color: white;
+  // TODO dynamic text color
+
+  &:first-child {
+    border-top-left-radius: calc(var(--qui-progress-size) / 8);
+    border-bottom-left-radius: calc(var(--qui-progress-size) / 8);
+  }
+
+  &:last-child {
+    border-top-right-radius: calc(var(--qui-progress-size) / 8);
+    border-bottom-right-radius: calc(var(--qui-progress-size) / 8);
+  }
+
+  :global(body[data-theme="dark"]) & {
+    background-color: var(--qui-color-8);
+  }
+}

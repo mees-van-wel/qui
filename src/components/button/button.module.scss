@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--qui-button-size);
+  gap: calc(var(--qui-button-size) / 2);
   position: relative;
   border: calc(var(--qui-button-size) / 8 - 1px) solid transparent;
   padding: calc(var(--qui-button-size) / 2) var(--qui-button-size);
@@ -19,15 +19,6 @@
 
   &:active:not(.root--disabled, .root--loading) {
     transform: translateY(calc(var(--qui-button-size) / 8));
-  }
-
-  &__loader-wrapper {
-    position: absolute;
-    border-radius: calc(var(--qui-button-size) / 4);
-    inset: calc(-1 * var(--qui-button-size) / 8 + 1px);
-    background-color: rgb(from var(--qui-color-foreground) r g b / 35%);
-    display: grid;
-    place-content: center;
   }
 
   &--compact {
@@ -109,4 +100,13 @@
       background-color: var(--qui-color-neutral) !important;
     }
   }
+}
+
+.loader-wrapper {
+  position: absolute;
+  border-radius: calc(var(--qui-button-size) / 4);
+  inset: calc(-1 * var(--qui-button-size) / 8 + 1px);
+  background-color: rgb(from var(--qui-color-foreground) r g b / 35%);
+  display: grid;
+  place-content: center;
 }

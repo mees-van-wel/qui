@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { SelectInputContext } from "../selectInputContext";
 import classes from "./option.module.scss";
 
-interface OptionProps {
+export type OptionProps = {
   option: SelectOption;
   onClick$?: (value: SelectValue | SelectValue[]) => void;
 }

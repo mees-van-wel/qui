@@ -7,14 +7,14 @@ import {
 import {
   type InputWrapperClassNames,
   type OmittedInputWrapperProps,
-  type InputWrapperStyles,
+  type InputWrapperSubProps,
   InputWrapper,
 } from "~/internal";
-import commonClasses from "~/common.module.scss";
+import commonStyles from "~/common.module.scss";
 import clsx from "clsx";
 
 export type TextareaStyles = {
-  wrapper?: InputWrapperStyles;
+  wrapper?: InputWrapperSubProps;
   input?: CSSProperties;
 };
 
@@ -63,8 +63,8 @@ export const Textarea = component$<TextareaProps>(
         <textarea
           id={randomId}
           style={styles?.input}
-          class={clsx(commonClasses.input, {
-            [commonClasses["input--error"]]: error && !disabled,
+          class={clsx(commonStyles.input, {
+            [commonStyles["input--error"]]: error && !disabled,
           })}
           disabled={disabled}
           autoComplete="off"

@@ -9,15 +9,15 @@
   color: var(--qui-color-6);
   border-radius: calc(var(--qui-avatar-size) * 2.5);
 
-  &__image {
-    width: 100%;
-    aspect-ratio: 1 /1;
-    object-fit: cover;
-    border-radius: calc(var(--qui-avatar-size) * 2.5);
-  }
-
   :global(body[data-theme="dark"]) & {
     background-color: rgb(from var(--qui-color-8) r g b / 20%);
     color: var(--qui-color-2);
   }
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 1 /1;
+  object-fit: cover;
+  border-radius: calc(var(--qui-avatar-size) * 2.5);
 }

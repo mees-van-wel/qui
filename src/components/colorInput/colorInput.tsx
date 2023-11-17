@@ -1,38 +1,34 @@
 import {
-  type Signal,
   component$,
   useId,
   useSignal,
   useTask$,
-  type CSSProperties,
+  QwikIntrinsicElements,
+  $,
+  type Signal,
 } from "@builder.io/qwik";
-import { Input } from "../../internal/input";
-import { ColorSwatch } from "../colorSwatch";
-import clsx from "clsx";
+import { ColorSwatch, type ColorSwatchProps } from "../colorSwatch";
 import {
   CloseIcon,
+  CloseIconProps,
   InputWrapper,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
-  type OmittedInputWrapperProps,
+  IconColorPicker,
+  Input,
+  type InputProps,
+  type InputWrapperProps,
+  inject,
 } from "~/internal";
-import classes from "./colorInput.module.scss";
+import styles from "./colorInput.module.scss";
 
-export type ColorInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
-  closeIcon?: CSSProperties;
+export type ColorInputSubProps = {
+  picker?: QwikIntrinsicElements["input"];
+  input?: InputProps;
+  swatch?: ColorSwatchProps;
+  closeIcon?: CloseIconProps;
 };
 
-export type ColorInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-  closeIcon?: string;
-};
-
-export type ColorInputProps = OmittedInputWrapperProps & {
-  classNames?: ColorInputClassNames;
-  styles?: ColorInputStyles;
+export type ColorInputProps = InputWrapperProps & {
+  subProps?: ColorInputSubProps;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -43,8 +39,7 @@ export type ColorInputProps = OmittedInputWrapperProps & {
 
 export const ColorInput = component$<ColorInputProps>(
   ({
-    classNames,
-    styles,
+    subProps,
     label,
     description,
     error,
@@ -52,70 +47,94 @@ export const ColorInput = component$<ColorInputProps>(
     disabled,
     value,
     onChange$,
+    ref,
     ...props
   }) => {
-    const colorInputRef = useSignal<HTMLInputElement>();
-    const textInputRef = useSignal<HTMLInputElement>();
     const randomId = useId();
-    const internalValue = useSignal(value || "");
+    const internalValue = useSignal(value?.replace("#", "") || "");
+    const colorInputRef = useSignal<HTMLInputElement>();
+    const localInputRef = useSignal<HTMLInputElement>();
+    const textInputRef = ref || localInputRef;
 
     useTask$(({ track }) => {
       track(() => value);
 
-      if (internalValue.value !== value) internalValue.value = value || "";
+      if (internalValue.value !== value?.replace("#", ""))
+        internalValue.value = value?.replace("#", "") || "";
+    });
+
+    const inputHandler = $((_: InputEvent, element: HTMLInputElement) => {
+      internalValue.value = element.value.replace("#", "");
+      if (onChange$) onChange$(element.value);
+    });
+
+    const changeHandler = $(() => {
+      textInputRef.value?.blur();
     });
 
     return (
       <InputWrapper
         inputId={randomId}
-        styles={styles?.wrapper}
-        classNames={classNames?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <input
-          class={classes["root__color-input"]}
           ref={colorInputRef}
           value={internalValue.value}
           type="color"
-          onInput$={(_, element) => {
-            internalValue.value = element.value;
-            if (onChange$) onChange$(element.value);
-          }}
-          onChange$={() => {
-            textInputRef.value?.blur();
-          }}
+          {...inject(subProps?.picker, {
+            class: styles["color-input"],
+            onInput$: inputHandler,
+            onChange$: changeHandler,
+          })}
         />
         <Input
           id={randomId}
-          style={styles?.input}
-          class={clsx(classes["root__text-input"], classNames?.input)}
           ref={textInputRef}
-          value={internalValue.value}
-          error={!!error}
+          value={`#${internalValue.value}`}
+          invalid={!!error}
           disabled={disabled}
           type="text"
-          readOnly
-          onFocus$={() => {
-            colorInputRef.value?.showPicker();
+          minLength={4}
+          maxLength={7}
+          onInput$={(_, element) => {
+            const value = element.value.replace("#", "");
+            internalValue.value = value;
+            if (!value) element.value = "#";
           }}
-          {...props}
+          {...inject(subProps?.input, { class: styles["text-input"] })}
         />
-        <ColorSwatch
-          class={classes["root__color-swatch"]}
-          size="sm"
-          color={internalValue.value || "transparent"}
-        />
+        {internalValue.value ? (
+          <ColorSwatch
+            size="sm"
+            onClick$={() => {
+              colorInputRef.value?.showPicker();
+            }}
+            {...inject(subProps?.swatch, {
+              class: styles["color-picker"],
+              color: `#${internalValue.value}`,
+            })}
+          />
+        ) : (
+          <IconColorPicker
+            onClick$={() => {
+              colorInputRef.value?.showPicker();
+            }}
+            class={styles["color-picker"]}
+          />
+        )}
+
         {!required && internalValue.value && (
           <CloseIcon
-            style={styles?.closeIcon}
-            class={classNames?.closeIcon}
-            onClick$={() => {
-              internalValue.value = "";
-            }}
+            {...inject(subProps?.closeIcon, {
+              onClick$: $(() => {
+                internalValue.value = "";
+              }),
+            })}
           />
         )}
       </InputWrapper>

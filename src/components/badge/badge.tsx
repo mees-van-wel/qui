@@ -1,43 +1,34 @@
+import { component$, Slot, type QwikIntrinsicElements } from "@builder.io/qwik";
 import {
-  component$,
-  Slot,
-  type QwikIntrinsicElements,
-  CSSProperties,
-} from "@builder.io/qwik";
-import { QuiColor, QuiSize, getSize, getColor } from "~/internal";
-import clsx from "clsx";
-import classes from "./badge.module.scss";
+  QuiColor,
+  QuiSize,
+  getSize,
+  getColor,
+  inject,
+  classBuilder,
+} from "~/internal";
+import styles from "./badge.module.scss";
 
-export type BadgeStyles = {
-  root?: CSSProperties;
-  dot?: CSSProperties;
-  inner?: CSSProperties;
-};
-
-export type BadgeClassNames = {
-  root?: string;
-  dot?: string;
-  inner?: string;
+export type BadgeSubProps = {
+  dot?: QwikIntrinsicElements["div"];
+  inner?: QwikIntrinsicElements["div"];
 };
 
 export type BadgeVariants = "filled" | "light" | "outline" | "dot";
 
-export type BadgeProps = Omit<
-  QwikIntrinsicElements["div"],
-  "style" | "class" | "color"
-> & {
-  styles?: BadgeStyles;
-  classNames?: BadgeClassNames;
+export type BadgeProps = QwikIntrinsicElements["div"] & {
+  subProps?: BadgeSubProps;
   variant?: BadgeVariants;
   size?: QuiSize;
   color?: QuiColor;
   fullWidth?: boolean;
 };
 
+const cb = classBuilder(styles);
+
 export const Badge = component$<BadgeProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     variant = "filled",
     size = "md",
     color,
@@ -45,31 +36,15 @@ export const Badge = component$<BadgeProps>(
     ...props
   }) => (
     <div
-      style={{
-        "--qui-badge-size": getSize(size),
-        ...getColor(color),
-        ...styles?.root,
-      }}
-      class={clsx(
-        classes.root,
-        classes[`root--variant-${variant}`],
-        {
-          [classes["root--full-width"]]: fullWidth,
-        },
-        classNames?.root
-      )}
-      {...props}
+      {...inject(props, {
+        style: [`--qui-badge-size: ${getSize(size)}`, getColor(color)],
+        class: cb("root", { variant, fullWidth }),
+      })}
     >
       {variant === "dot" && (
-        <div
-          style={styles?.dot}
-          class={clsx(classes.root__dot, classNames?.dot)}
-        />
+        <div {...inject(subProps?.dot, { class: styles.dot })} />
       )}
-      <div
-        style={styles?.inner}
-        class={clsx(classes.root__inner, classNames?.inner)}
-      >
+      <div {...inject(subProps?.inner, { class: styles.inner })}>
         <Slot />
       </div>
     </div>

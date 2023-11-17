@@ -4,12 +4,10 @@ import {
   type CSSProperties,
   type QwikIntrinsicElements,
 } from "@builder.io/qwik";
-import { type QuiSize, getSize } from "~/internal";
-import clsx from "clsx";
-import classes from "./group.module.scss";
+import { type QuiSize, getSize, inject, classBuilder } from "~/internal";
+import styles from "./group.module.scss";
 
-export type GroupProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type GroupProps = QwikIntrinsicElements["div"] & {
   align?: CSSProperties["alignItems"];
   justify?: CSSProperties["justifyContent"];
   wrap?: CSSProperties["flexWrap"];
@@ -17,10 +15,10 @@ export type GroupProps = Omit<QwikIntrinsicElements["div"], "style"> & {
   grow?: boolean;
 };
 
+const cb = classBuilder(styles);
+
 export const Group = component$<GroupProps>(
   ({
-    style,
-    class: className,
     align = "center",
     justify = "flex-start",
     wrap = "wrap",
@@ -29,21 +27,15 @@ export const Group = component$<GroupProps>(
     ...props
   }) => (
     <div
-      style={{
-        "--qui-group-align": align,
-        "--qui-group-justify": justify,
-        "--qui-group-wrap": wrap,
-        "--qui-group-gap": getSize(gap),
-        ...style,
-      }}
-      class={clsx(
-        classes.root,
-        {
-          [classes["root--grow"]]: grow,
+      {...inject(props, {
+        style: {
+          alignItems: align,
+          justifyContent: justify,
+          flexWrap: wrap,
+          gap: getSize(gap),
         },
-        className
-      )}
-      {...props}
+        class: cb("root", { grow }),
+      })}
     >
       <Slot />
     </div>

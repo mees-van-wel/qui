@@ -1,33 +1,23 @@
-import {
-  component$,
-  CSSProperties,
-  type QwikIntrinsicElements,
-} from "@builder.io/qwik";
-import clsx from "clsx";
-import classes from "./colorSwatch.module.scss";
-import { getSize, QuiSize } from "~/internal";
+import { component$, type QwikIntrinsicElements } from "@builder.io/qwik";
+import styles from "./colorSwatch.module.scss";
+import { getSize, inject, QuiSize } from "~/internal";
 
-export type colorSwatchProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type ColorSwatchProps = Omit<QwikIntrinsicElements["div"], "color"> & {
   color: string;
   size?: QuiSize;
 };
 
-export const ColorSwatch = component$<colorSwatchProps>(
-  ({ style, color, size = "md", class: className, ...props }) => {
+export const ColorSwatch = component$<ColorSwatchProps>(
+  ({ color, size = "md", ...props }) => {
     return (
       <div
-        style={{
-          "--qui-color-swatch-color": color,
-          "--qui-color-swatch-size": getSize(size),
-          ...style,
-        }}
-        class={clsx(
-          classes.root,
-          "flex h-6 w-6 items-center justify-center rounded-full bg-primary-6 text-white shadow-inner dark:bg-primary-6",
-          className
-        )}
-        {...props}
+        {...inject(props, {
+          style: [
+            `--qui-color-swatch-color: ${color}`,
+            `--qui-color-swatch-size: ${getSize(size)}`,
+          ],
+          class: styles.root,
+        })}
       />
     );
   }

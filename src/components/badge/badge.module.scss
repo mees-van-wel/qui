@@ -8,19 +8,6 @@
   padding: calc(var(--qui-badge-size) / 4) var(--qui-badge-size);
   font-weight: bold;
 
-  &__dot {
-    height: calc(var(--qui-badge-size) / 2);
-    width: calc(var(--qui-badge-size) / 2);
-    border-radius: var(--qui-badge-size);
-    background-color: var(--qui-color-7);
-  }
-
-  &__inner {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
   &--full-width {
     width: 100%;
   }
@@ -62,4 +49,17 @@
       border-color: rgb(from var(--qui-color-7) r g b / 50%);
     }
   }
+}
+
+.dot {
+  height: calc(var(--qui-badge-size) / 2);
+  width: calc(var(--qui-badge-size) / 2);
+  border-radius: var(--qui-badge-size);
+  background-color: var(--qui-color-7);
+}
+
+.inner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

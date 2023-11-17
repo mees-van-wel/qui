@@ -1,35 +1,21 @@
-import {
-  type Signal,
-  component$,
-  useId,
-  $,
-  useSignal,
-  type CSSProperties,
-} from "@builder.io/qwik";
+import { type Signal, component$, useId, $, useSignal } from "@builder.io/qwik";
 import {
   CloseIcon,
   Input,
   InputWrapper,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
-  type OmittedInputWrapperProps,
+  type InputWrapperProps,
+  type InputProps,
+  type CloseIconProps,
+  inject,
 } from "~/internal";
 
-export type TimeInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
-  closeIcon?: CSSProperties;
+export type TimeInputSubProps = {
+  input?: InputProps;
+  closeIcon?: CloseIconProps;
 };
 
-export type TimeInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-  closeIcon?: string;
-};
-
-export type TimeInputProps = OmittedInputWrapperProps & {
-  styles?: TimeInputStyles;
-  classNames?: TimeInputClassNames;
+export type TimeInputProps = InputWrapperProps & {
+  subProps?: TimeInputSubProps;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -41,8 +27,7 @@ export type TimeInputProps = OmittedInputWrapperProps & {
 
 export const TimeInput = component$<TimeInputProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     label,
     description,
     error,
@@ -64,47 +49,49 @@ export const TimeInput = component$<TimeInputProps>(
       if (onChange$) onChange$("");
     });
 
+    const focusHandler = $(() => {
+      if (!inputRef.value) return;
+      inputRef.value.showPicker();
+    });
+
+    const changeHandler = $(() => {
+      if (!inputRef.value) return;
+
+      inputRef.value.blur();
+
+      if (inputRef.value.value) {
+        if (onChange$) onChange$(inputRef.value.value);
+      } else if (required && value) inputRef.value.value = value;
+      else clearHandler();
+    });
+
     return (
       <InputWrapper
         inputId={randomId}
-        classNames={classNames?.wrapper}
-        styles={styles?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <Input
           ref={inputRef}
           id={randomId}
-          class={classNames?.input}
-          style={styles?.input}
-          error={!!error}
+          invalid={!!error}
           disabled={disabled}
           type={disabled && !value ? "text" : "time"}
-          onFocus$={() => {
-            if (!inputRef.value) return;
-            inputRef.value.showPicker();
-          }}
           value={value}
-          onChange$={() => {
-            if (!inputRef.value) return;
-
-            inputRef.value.blur();
-
-            if (inputRef.value.value) {
-              if (onChange$) onChange$(inputRef.value.value);
-            } else if (required && value) inputRef.value.value = value;
-            else clearHandler();
-          }}
-          {...props}
+          {...inject(subProps?.input, {
+            onFocus$: focusHandler,
+            onChange$: changeHandler,
+          })}
         />
         {!required && value && !noIcon && (
           <CloseIcon
-            class={classNames?.closeIcon}
-            style={styles?.closeIcon}
-            onClick$={clearHandler}
+            {...inject(subProps?.closeIcon, {
+              onClick$: clearHandler,
+            })}
           />
         )}
       </InputWrapper>

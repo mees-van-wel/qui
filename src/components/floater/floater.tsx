@@ -5,6 +5,8 @@ import {
   useSignal,
   useStore,
   useVisibleTask$,
+  QwikIntrinsicElements,
+  CSSProperties,
 } from "@builder.io/qwik";
 import {
   computePosition,
@@ -12,13 +14,27 @@ import {
   shift,
   offset,
   autoUpdate,
+  type Placement,
 } from "@floating-ui/dom";
-import classes from "./floater.module.scss";
-import { getZIndex } from "~/internal";
+import { getZIndex, inject } from "~/internal";
 
-export const Floater = component$(
-  ({ relativeRef }: { relativeRef: Signal<HTMLElement | undefined> }) => {
-    const floaterRef = useSignal<HTMLElement>();
+export type FloaterProps = QwikIntrinsicElements["div"] & {
+  relativeRef?: Signal<HTMLElement | undefined>;
+  position?: CSSProperties["position"];
+  placement?: Placement;
+  ref?: Signal<HTMLElement | undefined>;
+};
+
+export const Floater = component$<FloaterProps>(
+  ({
+    relativeRef,
+    position = "absolute",
+    placement = "bottom",
+    ref,
+    ...props
+  }) => {
+    const refSignal = useSignal<HTMLElement>();
+    const floaterRef = ref || refSignal;
     const floaterPosition = useStore<{
       left: number | undefined;
       top: number | undefined;
@@ -31,7 +47,7 @@ export const Floater = component$(
       function updatePosition() {
         if (!relativeRef?.value || !floaterRef.value) return;
         computePosition(relativeRef.value, floaterRef.value, {
-          placement: "bottom-start",
+          placement,
           middleware: [flip(), shift(), offset(6)],
         }).then(({ x, y }) => {
           floaterPosition.left = x;
@@ -55,13 +71,16 @@ export const Floater = component$(
     return (
       <div
         ref={floaterRef}
-        style={{
-          "--qui-floater-opacity": floaterPosition.top !== undefined ? 1 : 0,
-          "--qui-floater-z-index": getZIndex(),
-          "--qui-floater-left": `${floaterPosition.left}px`,
-          "--qui-floater-top": `${floaterPosition.top}px`,
-        }}
-        class={classes.root}
+        {...inject(props, {
+          style: {
+            position,
+            opacity: !relativeRef || floaterPosition.top !== undefined ? 1 : 0,
+            "z-index": getZIndex(),
+            left: !relativeRef ? undefined : `${floaterPosition.left}px`,
+            top: !relativeRef ? undefined : `${floaterPosition.top}px`,
+            inset: !relativeRef ? 0 : undefined,
+          },
+        })}
       >
         <Slot />
       </div>

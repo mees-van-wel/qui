@@ -5,35 +5,26 @@ import {
   $,
   useComputed$,
   useVisibleTask$,
-  type CSSProperties,
 } from "@builder.io/qwik";
 import {
-  type OmittedInputWrapperProps,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
   InputWrapper,
   Input,
+  type InputWrapperProps,
+  type InputProps,
+  inject,
 } from "~/internal";
-import clsx from "clsx";
 import { Group } from "../group";
-import classes from "./pinInput.module.scss";
+import styles from "./pinInput.module.scss";
 
-export type PinInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
+export type PinInputSubProps = {
+  input?: InputProps;
 };
 
-export type PinInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-};
-
-export type PinInputProps = OmittedInputWrapperProps & {
-  styles?: PinInputStyles;
-  classNames?: PinInputClassNames;
+export type PinInputProps = InputWrapperProps & {
+  subProps?: PinInputSubProps;
+  length?: number;
   value?: string;
   autoFocus?: boolean;
-  length?: number;
   name?: string;
   placeholder?: string;
   onChange$?: (value: string) => void;
@@ -41,9 +32,8 @@ export type PinInputProps = OmittedInputWrapperProps & {
 
 export const PinInput = component$<PinInputProps>(
   ({
+    subProps,
     length = 4,
-    classNames,
-    styles,
     label,
     description,
     error,
@@ -69,9 +59,11 @@ export const PinInput = component$<PinInputProps>(
       }
     });
 
-    const pasteHandler = $(async (event: ClipboardEvent) => {
-      event.stopPropagation();
-      event.preventDefault();
+    const pasteHandler = $(async () => {
+      // TODO Test if it works without this
+      // event: QwikClipboardEvent<HTMLDivElement>
+      // event.stopPropagation();
+      // event.preventDefault();
 
       const pastedData = await navigator.clipboard.readText();
       const formattedData = pastedData
@@ -118,58 +110,57 @@ export const PinInput = component$<PinInputProps>(
     return (
       <InputWrapper
         inputId={randomId}
-        classNames={classNames?.wrapper}
-        styles={styles?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
-        {/* @ts-ignore */}
         <Group onPaste$={pasteHandler}>
           {arrayLoop.value.map((_, index) => (
             <Input
               key={index}
-              class={clsx(classes.input, classNames?.input)}
-              style={styles?.input}
-              error={!!error}
+              invalid={!!error}
               disabled={disabled}
               type="text"
               inputMode="numeric"
               tabIndex={index === 0 ? undefined : -1}
               autoFocus={autoFocus && index === 0}
-              onFocus$={(_, element) => {
-                if (!element.value) focusHandler();
-              }}
-              ref={$((elementRef: any) => {
-                refs[index] = elementRef;
-              })}
-              onInput$={(event: InputEvent, element) => {
-                event.preventDefault();
-                if (event.inputType === "insertFromPaste") return;
-                changeHandler(element, index);
-              }}
-              onKeyDown$={(event, element) => {
-                if (
-                  (event as KeyboardEvent).code === "Backspace" &&
-                  index > 0
-                ) {
-                  event.preventDefault();
-
-                  if (element.value) element.value = "";
-
-                  const previousInput = refs[index - 1]!;
-
-                  previousInput.focus();
-                  previousInput.setSelectionRange(
-                    0,
-                    previousInput.value.length
-                  );
-                }
-              }}
               value={value ? value[index] : undefined}
-              {...props}
+              {...inject(subProps?.input, {
+                class: styles.input,
+                // TODO auto poputlate with typings from props
+                onFocus$: $((_, element) => {
+                  if (!element.value) focusHandler();
+                }),
+                ref: $((elementRef: any) => {
+                  refs[index] = elementRef;
+                }),
+                onInput$: $((event, element) => {
+                  event.preventDefault();
+                  if (event.inputType === "insertFromPaste") return;
+                  changeHandler(element, index);
+                }),
+                onKeyDown$: $((event, element) => {
+                  if (
+                    (event as KeyboardEvent).code === "Backspace" &&
+                    index > 0
+                  ) {
+                    event.preventDefault();
+
+                    if (element.value) element.value = "";
+
+                    const previousInput = refs[index - 1]!;
+
+                    previousInput.focus();
+                    previousInput.setSelectionRange(
+                      0,
+                      previousInput.value.length
+                    );
+                  }
+                }),
+              })}
             />
           ))}
         </Group>

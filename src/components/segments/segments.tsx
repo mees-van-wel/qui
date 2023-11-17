@@ -4,29 +4,28 @@ import {
   useVisibleTask$,
   useId,
   useStore,
-  type CSSProperties,
+  QwikIntrinsicElements,
+  $,
 } from "@builder.io/qwik";
-import cslx from "clsx";
-import classes from "./segments.module.scss";
-import { QuiColor, QuiSize, getColor, getSize } from "~/internal";
+import styles from "./segments.module.scss";
+import {
+  QuiColor,
+  QuiSize,
+  classBuilder,
+  getColor,
+  getSize,
+  inject,
+} from "~/internal";
 
-export type SegmentsStyles = {
-  root?: CSSProperties;
-  overlay?: CSSProperties;
-  segment?: CSSProperties;
-};
-
-export type SegmentsClassNames = {
-  root?: string;
-  overlay?: string;
-  segment?: string;
+export type SegmentsSubProps = {
+  overlay?: QwikIntrinsicElements["span"];
+  segment?: QwikIntrinsicElements["button"];
 };
 
 export type SegmentsData = { label: string; value: string; disabled?: boolean };
 
-export type SegmentsProps = {
-  styles?: SegmentsStyles;
-  classNames?: SegmentsClassNames;
+export type SegmentsProps = QwikIntrinsicElements["div"] & {
+  subProps?: SegmentsSubProps;
   data: SegmentsData[];
   size?: QuiSize;
   color?: QuiColor;
@@ -36,10 +35,11 @@ export type SegmentsProps = {
   disabled?: boolean;
 };
 
+const cb = classBuilder(styles);
+
 export const Segments = component$<SegmentsProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     data,
     size = "md",
     color,
@@ -47,6 +47,7 @@ export const Segments = component$<SegmentsProps>(
     onChange$,
     orientation = "horizontal",
     disabled,
+    ...props
   }) => {
     const currentValue = useSignal(value || data[0]?.value);
     const randomId = useId();
@@ -83,48 +84,38 @@ export const Segments = component$<SegmentsProps>(
 
     return (
       <div
-        style={{
-          "--qui-segments-size": getSize(size),
-          ...getColor(color),
-          ...styles?.root,
-        }}
-        class={cslx(
-          classes.root,
-          {
-            [classes["root--vertical"]]: orientation === "vertical",
-          },
-          classNames?.root
-        )}
+        {...inject(props, {
+          style: [`--qui-segments-size: ${getSize(size)}`, getColor(color)],
+          class: cb("root", { vertical: orientation === "vertical" }),
+        })}
       >
         <span
-          style={{
-            "--qui-segments-overlay-width": `${activeSize.width}px`,
-            "--qui-segments-overlay-height": `${activeSize.height}px`,
-            "--qui-segments-overlay-left": `${activeSize.offsetLeft}px`,
-            "--qui-segments-overlay-top": `${activeSize.offsetTop}px`,
-            ...styles?.overlay,
-          }}
-          class={cslx(classes.overlay, classNames?.overlay)}
+          {...inject(subProps?.overlay, {
+            style: [
+              `--qui-segments-overlay-width: ${activeSize.width}px`,
+              `--qui-segments-overlay-height: ${activeSize.height}px`,
+              `--qui-segments-overlay-left: ${activeSize.offsetLeft}px`,
+              `--qui-segments-overlay-top: ${activeSize.offsetTop}px`,
+            ],
+            class: styles.overlay,
+          })}
         />
         {data.map(({ value, label, disabled: disabledOption }, index) => (
           <button
             key={value}
-            style={styles?.segment}
-            class={cslx(
-              classes.segment,
-              {
-                [classes["segment--previous-active"]]:
-                  currentValue.value === data[index - 1]?.value,
-                [classes["segment--active"]]: currentValue.value === value,
-              },
-              classNames?.segment
-            )}
+            // TODO use ref instead
             id={`qui-segment-${randomId}-${value}`}
-            onClick$={() => {
-              currentValue.value = value;
-              if (onChange$) onChange$(currentValue.value);
-            }}
             disabled={disabled || disabledOption}
+            {...inject(subProps?.segment, {
+              class: cb("segment", {
+                previousActive: currentValue.value === data[index - 1]?.value,
+                active: currentValue.value === value,
+              }),
+              onClick$: $(() => {
+                currentValue.value = value;
+                if (onChange$) onChange$(currentValue.value);
+              }),
+            })}
           >
             {label}
           </button>

@@ -5,19 +5,17 @@ import {
   useTask$,
   useContextProvider,
   type QwikIntrinsicElements,
-  type CSSProperties,
 } from "@builder.io/qwik";
 import { AccordionItemContext, useAccordionContext } from "../accordionContext";
-import cslx from "clsx";
-import classes from "./accordionItem.module.scss";
+import styles from "./accordionItem.module.scss";
+import { inject } from "~/internal";
 
-export type AccordionItemProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type AccordionItemProps = QwikIntrinsicElements["div"] & {
   defaultOpen?: boolean;
 };
 
 export const AccordionItem = component$<AccordionItemProps>(
-  ({ class: className, defaultOpen, ...props }) => {
+  ({ defaultOpen, ...props }) => {
     const randomId = useId();
     const accordionContext = useAccordionContext();
     useContextProvider(AccordionItemContext, { id: randomId });
@@ -27,7 +25,7 @@ export const AccordionItem = component$<AccordionItemProps>(
     });
 
     return (
-      <div class={cslx(classes.root, className)} {...props}>
+      <div {...inject(props, { class: styles.root })}>
         <Slot />
       </div>
     );

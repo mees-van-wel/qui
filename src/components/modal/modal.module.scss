@@ -1,0 +1,88 @@
+.root {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  background-color: rgb(from var(--qui-color-background) r g b / 50%);
+  padding: 2rem;
+  animation: bgOpenAnimation 500ms ease-in-out forwards;
+
+  &--closed {
+    animation: bgCloseAnimation 500ms ease-in-out forwards;
+  }
+}
+
+.wrapper {
+  max-width: calc(var(--qui-modal-size) * 28);
+  animation: openAnimation 500ms ease-in-out forwards;
+
+  .root--closed & {
+    animation: closeAnimation 500ms ease-in-out forwards;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: solid 1px var(--qui-color-background);
+  padding: 1rem;
+}
+
+.closeIcon {
+  cursor: pointer;
+  transition: color 100ms;
+
+  &:hover {
+    color: var(--oc-red-6);
+
+    :global(body[data-theme="dark"]) & {
+      color: var(--oc-red-8);
+    }
+  }
+}
+
+.inner {
+  padding: 1rem;
+}
+
+@keyframes bgOpenAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bgCloseAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes openAnimation {
+  0% {
+    transform: scale(0) perspective(500px);
+  }
+  50% {
+    transform: scale(1.05) perspective(500px);
+  }
+  100% {
+    transform: scale(1) perspective(500px);
+  }
+}
+
+@keyframes closeAnimation {
+  0% {
+    transform: scale(1) perspective(500px);
+  }
+  50% {
+    transform: scale(1.05) perspective(500px);
+  }
+  100% {
+    transform: scale(0) perspective(500px);
+  }
+}

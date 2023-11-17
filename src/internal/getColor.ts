@@ -1,9 +1,10 @@
+import type { CSSProperties } from "@builder.io/qwik";
 import { QuiColor } from "./types";
 
 const COLOR_ARRAY_SIZE = 10;
 
 export const getColor = (color?: QuiColor) => {
-  const output: Record<string, string> = {};
+  const output: CSSProperties = {};
   const colors = Array.isArray(color)
     ? color
     : Array(COLOR_ARRAY_SIZE).fill(null);

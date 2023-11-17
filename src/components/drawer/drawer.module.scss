@@ -1,0 +1,85 @@
+.root {
+  display: flex;
+  align-items: stretch;
+  background-color: rgb(from var(--qui-color-background) r g b / 50%);
+  animation: bgOpenAnimation 500ms ease-in-out forwards;
+
+  &--closed {
+    animation: bgCloseAnimation 500ms ease-in-out forwards;
+  }
+}
+
+.wrapper {
+  background-color: var(--qui-color-foreground);
+  width: 20%;
+  animation: openAnimation 500ms ease-in-out forwards;
+  overflow-y: auto;
+
+  .root--closed & {
+    animation: closeAnimation 500ms ease-in-out forwards;
+  }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: solid 1px var(--qui-color-background);
+  padding: 1rem;
+}
+
+.closeIcon {
+  cursor: pointer;
+  transition: color 100ms;
+
+  &:hover {
+    color: var(--oc-red-6);
+
+    :global(body[data-theme="dark"]) & {
+      color: var(--oc-red-8);
+    }
+  }
+}
+
+.inner {
+  padding: 1rem;
+}
+
+@keyframes bgOpenAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bgCloseAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes openAnimation {
+  0% {
+    transform: translateX(-100%) scaleX(0) perspective(500px);
+  }
+
+  100% {
+    transform: translateX(0) scaleX(1) perspective(500px);
+  }
+}
+
+@keyframes closeAnimation {
+  0% {
+    transform: translateX(0) scaleX(1) perspective(500px);
+  }
+  100% {
+    transform: translateX(-100%) scaleX(0) perspective(500px);
+  }
+}

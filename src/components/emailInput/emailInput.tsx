@@ -1,30 +1,18 @@
+import { type Signal, component$, useId, $ } from "@builder.io/qwik";
 import {
-  type Signal,
-  component$,
-  useId,
-  type CSSProperties,
-} from "@builder.io/qwik";
-import {
-  type OmittedInputWrapperProps,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
+  type InputWrapperProps,
+  type InputProps,
   InputWrapper,
   Input,
+  inject,
 } from "~/internal";
 
-export type EmailInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
+export type EmailInputSubProps = {
+  input?: InputProps;
 };
 
-export type EmailInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-};
-
-export type EmailInputProps = OmittedInputWrapperProps & {
-  styles?: EmailInputStyles;
-  classNames?: EmailInputClassNames;
+export type EmailInputProps = InputWrapperProps & {
+  subProps?: EmailInputSubProps;
   value?: string;
   autoFocus?: boolean;
   autoComplete?: boolean;
@@ -36,8 +24,7 @@ export type EmailInputProps = OmittedInputWrapperProps & {
 
 export const EmailInput = component$<EmailInputProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     label,
     description,
     error,
@@ -52,26 +39,24 @@ export const EmailInput = component$<EmailInputProps>(
     return (
       <InputWrapper
         inputId={randomId}
-        styles={styles?.wrapper}
-        classNames={classNames?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <Input
           id={randomId}
-          style={styles?.input}
-          class={classNames?.input}
-          error={!!error}
+          invalid={!!error}
           disabled={disabled}
           autoComplete={autoComplete ? "username" : undefined}
           type="email"
-          onInput$={(_, element) => {
-            if (onChange$) onChange$(element.value.toLowerCase());
-          }}
-          {...props}
+          {...inject(subProps?.input, {
+            onInput$: $((_: Event, element: HTMLInputElement) => {
+              if (onChange$) onChange$(element.value.toLowerCase());
+            }),
+          })}
         />
       </InputWrapper>
     );

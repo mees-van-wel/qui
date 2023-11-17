@@ -1,19 +1,50 @@
-import { component$, useSignal } from "@builder.io/qwik";
-import {
-  Accordion,
-  Paper,
-  PinInput,
-  SelectInput,
-  SelectValue,
-} from "./components";
+import { component$, useSignal, $ } from "@builder.io/qwik";
+import { ColorInput, Paper } from "./components";
 import { UiContextProvider } from "./context";
 
 const Next = component$(() => {
-  const value = useSignal<SelectValue[]>([1, 3]);
+  const clickHandler = $(() => {
+    alert("lol");
+  });
 
   return (
     <>
-      <SelectInput
+      <ColorInput />
+      {/* <Modal title="Modal" state={signal}>
+        This is the content
+      </Modal> */}
+      {/* <RichTextEditor
+        value={signal.value}
+        onChange$={(value) => {
+          signal.value = value;
+        }}
+      /> */}
+      {/* <Progress
+        sections={[
+          { value: 20, color: "grape", label: "Grape" },
+          { value: 50, color: "cyan", label: "Cyan" },
+          { value: 60, color: "red", label: "Red" },
+        ]}
+        subProps={{
+          sections: [
+            undefined,
+            {
+              onClick$: clickHandler,
+            },
+          ],
+        }}
+      />
+      <Popover trigger={<p>This is complex</p>}>
+        This is what UI wanna show
+      </Popover> */}
+      {/* <Notification title="asasd" loading /> */}
+      {/* <RichTextEditor
+        value={state.value}
+        onChange$={(value) => { 
+          state.value = value;
+        }}
+      /> */}
+      {/* <SelectInput
         multiple
         value={value.value}
         // error="lol"
@@ -37,7 +68,7 @@ const Next = component$(() => {
           },
         ]}
         label="Select"
-      />
+      /> */}
     </>
   );
 });

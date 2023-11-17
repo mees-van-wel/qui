@@ -1,5 +1,4 @@
 import {
-  type CSSProperties,
   type Component,
   component$,
   Slot,
@@ -18,27 +17,24 @@ export type AccordionCompound = {
   Content: typeof AccordionContent;
 };
 
-export type AccordionProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type AccordionProps = QwikIntrinsicElements["div"] & {
   multiple?: boolean;
 };
 
-const _Accordion = component$<AccordionProps>(
-  ({ class: className, multiple, ...props }) => {
-    const accordionContext = useStore<AccordionContext>({
-      items: {},
-      multiple,
-    });
+const _Accordion = component$<AccordionProps>(({ multiple, ...props }) => {
+  const accordionContext = useStore<AccordionContext>({
+    items: {},
+    multiple,
+  });
 
-    useContextProvider(AccordionContext, accordionContext);
+  useContextProvider(AccordionContext, accordionContext);
 
-    return (
-      <div class={className} {...props}>
-        <Slot />
-      </div>
-    );
-  }
-) as Component<AccordionProps> & AccordionCompound;
+  return (
+    <div {...props}>
+      <Slot />
+    </div>
+  );
+}) as Component<AccordionProps> & AccordionCompound;
 
 _Accordion.Item = AccordionItem;
 _Accordion.Trigger = AccordionTrigger;

@@ -1,0 +1,41 @@
+.root {
+  display: inline-block;
+}
+
+.floater {
+  animation: openAnimation 200ms ease-in-out forwards;
+}
+
+.floater--closed {
+  animation: closeAnimation 200ms ease-in-out forwards;
+}
+
+@keyframes openAnimation {
+  0% {
+    transform: scale(0) perspective(500px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) perspective(500px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1) perspective(500px);
+    opacity: 1;
+  }
+}
+
+@keyframes closeAnimation {
+  0% {
+    transform: scale(1) perspective(500px);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05) perspective(500px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0) perspective(500px);
+    opacity: 0;
+  }
+}

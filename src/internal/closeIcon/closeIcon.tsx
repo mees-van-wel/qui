@@ -3,7 +3,9 @@ import { IconX } from "../icons";
 import clsx from "clsx";
 import classes from "./closeIcon.module.scss";
 
-export const CloseIcon = component$<QwikIntrinsicElements["svg"]>(
+export type CloseIconProps = QwikIntrinsicElements["svg"];
+
+export const CloseIcon = component$<CloseIconProps>(
   ({ class: classname, ...props }) => (
     <IconX class={clsx(classes.root, classname)} {...props} />
   )

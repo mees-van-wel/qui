@@ -1,32 +1,16 @@
+import { component$, useId, useSignal, $ } from "@builder.io/qwik";
 import {
-  component$,
-  useId,
-  useSignal,
-  $,
-  CSSProperties,
-} from "@builder.io/qwik";
-import {
+  type CloseIconProps,
+  type InputWrapperProps,
   InputWrapper,
-  type OmittedInputWrapperProps,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
   CloseIcon,
+  inject,
 } from "~/internal";
-import {
-  DateInput,
-  dateToDateString,
-  type DateInputClassNames,
-  type DateInputStyles,
-} from "../dateInput";
-import {
-  TimeInput,
-  type TimeInputClassNames,
-  type TimeInputStyles,
-} from "../timeInput";
-import clsx from "clsx";
-import classes from "./dateTimeInput.module.scss";
+import { type DateInputProps, DateInput, dateToDateString } from "../dateInput";
+import { TimeInput, type TimeInputProps } from "../timeInput";
+import styles from "./dateTimeInput.module.scss";
 
-function updateTime(date: Date, time: string) {
+const updateTime = (date: Date, time: string) => {
   if (!time) return date;
 
   const [hours, minutes] = time.split(":").map(Number);
@@ -35,30 +19,21 @@ function updateTime(date: Date, time: string) {
   clone.setMinutes(minutes);
 
   return clone;
-}
+};
 
 export const dateToTimeString = (date: Date) =>
   `${String(date.getHours()).padStart(2, "0")}:${String(
     date.getMinutes()
   ).padStart(2, "0")}`;
 
-export type DateTimeInputStyles = {
-  wrapper?: InputWrapperStyles;
-  dateInput?: DateInputStyles;
-  timeInput?: TimeInputStyles;
-  icon?: CSSProperties;
+export type DateTimeInputSubProps = {
+  dateInput?: DateInputProps;
+  timeInput?: TimeInputProps;
+  closeIcon?: CloseIconProps;
 };
 
-export type DateTimeInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  dateInput?: DateInputClassNames;
-  timeInput?: TimeInputClassNames;
-  icon?: string;
-};
-
-export type DateTimeInputProps = Omit<OmittedInputWrapperProps, "required"> & {
-  styles?: DateTimeInputStyles;
-  classNames?: DateTimeInputClassNames;
+export type DateTimeInputProps = InputWrapperProps & {
+  subProps?: DateTimeInputSubProps;
   value?: Date | null;
   required?: boolean;
   onChange$?: (value: Date | null) => void;
@@ -77,8 +52,7 @@ export type DateTimeInputProps = Omit<OmittedInputWrapperProps, "required"> & {
 
 export const DateTimeInput = component$<DateTimeInputProps>(
   ({
-    classNames,
-    styles,
+    subProps,
     label,
     description,
     error,
@@ -86,6 +60,7 @@ export const DateTimeInput = component$<DateTimeInputProps>(
     disabled,
     value,
     onChange$,
+    ...props
   }) => {
     const dateInputRef = useSignal<HTMLInputElement>();
     const timeInputRef = useSignal<HTMLInputElement>();
@@ -127,45 +102,40 @@ export const DateTimeInput = component$<DateTimeInputProps>(
     return (
       <InputWrapper
         inputId={randomId}
-        styles={styles?.wrapper}
-        classNames={classNames?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <DateInput
-          styles={styles?.dateInput}
-          classNames={{
-            input: clsx(classes["date-input"], classNames?.dateInput?.input),
-            ...classNames?.dateInput,
-          }}
           ref={dateInputRef}
           value={value}
           noIcon={!!value && !required}
-          onChange$={dateChangeHandler}
           required={required}
           disabled={disabled}
+          {...inject(subProps?.dateInput, {
+            subProps: { input: { class: styles["date-input"] } },
+            onChange$: dateChangeHandler,
+          })}
         />
         <TimeInput
-          styles={styles?.timeInput}
-          classNames={{
-            input: clsx(classes["time-input"], classNames?.timeInput?.input),
-            ...classNames?.timeInput,
-          }}
           ref={timeInputRef}
           value={value ? dateToTimeString(value) : undefined}
           noIcon={!!value && !required}
-          onChange$={timeChangeHandler}
           required={required}
           disabled={disabled}
+          {...inject(subProps?.timeInput, {
+            subProps: { input: { class: styles["time-input"] } },
+            onChange$: timeChangeHandler,
+          })}
         />
         {!disabled && !required && value && (
           <CloseIcon
-            style={styles?.icon}
-            class={classNames?.icon}
-            onClick$={clearHandler}
+            {...inject(subProps?.closeIcon, {
+              onClick$: clearHandler,
+            })}
           />
         )}
       </InputWrapper>

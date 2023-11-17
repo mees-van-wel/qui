@@ -53,8 +53,16 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.5.3",
+    "@tiptap/core": "^2.1.12",
+    "@tiptap/extension-link": "^2.1.12",
+    "@tiptap/extension-placeholder": "^2.1.12",
+    "@tiptap/extension-text-align": "^2.1.12",
+    "@tiptap/extension-underline": "^2.1.12",
+    "@tiptap/pm": "^2.1.12",
+    "@tiptap/starter-kit": "^2.1.12",
     "clsx": "^2.0.0",
     "modern-normalize": "^2.0.0",
-    "open-color": "^1.9.1"
+    "open-color": "^1.9.1",
+    "style-to-object": "^1.0.4"
   }
 }

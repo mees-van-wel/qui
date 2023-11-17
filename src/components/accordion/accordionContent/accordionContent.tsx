@@ -1,44 +1,28 @@
-import {
-  component$,
-  type CSSProperties,
-  type QwikIntrinsicElements,
-  Slot,
-} from "@builder.io/qwik";
+import { component$, type QwikIntrinsicElements, Slot } from "@builder.io/qwik";
 import {
   useAccordionContext,
   useAccordionItemContext,
 } from "../accordionContext";
-import cslx from "clsx";
-import classes from "./accordionContent.module.scss";
+import styles from "./accordionContent.module.scss";
+import { classBuilder, inject } from "~/internal";
 
-export type AccordionContentProps = Omit<
-  QwikIntrinsicElements["div"],
-  "style"
-> & {
-  style?: CSSProperties;
-};
+export type AccordionContentProps = QwikIntrinsicElements["div"];
 
-export const AccordionContent = component$<AccordionContentProps>(
-  ({ class: className, ...props }) => {
-    const accordionContext = useAccordionContext();
-    const { id } = useAccordionItemContext();
+const cb = classBuilder(styles);
 
-    return (
-      <div
-        class={cslx(
-          classes.root,
-          "block overflow-hidden transition-all duration-300 ease-out",
-          {
-            [classes["root--open"]]: accordionContext.items[id],
-          },
-          className
-        )}
-        {...props}
-      >
-        <div class={cslx(classes.inner)}>
-          <Slot />
-        </div>
+export const AccordionContent = component$<AccordionContentProps>((props) => {
+  const accordionContext = useAccordionContext();
+  const { id } = useAccordionItemContext();
+
+  return (
+    <div
+      {...inject(props, {
+        class: cb("root", { open: accordionContext.items[id] }),
+      })}
+    >
+      <div class={styles.inner}>
+        <Slot />
       </div>
-    );
-  }
-);
+    </div>
+  );
+});

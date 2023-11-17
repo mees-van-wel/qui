@@ -1,30 +1,17 @@
+import { type Signal, component$, useId } from "@builder.io/qwik";
 import {
-  type Signal,
-  component$,
-  useId,
-  CSSProperties,
-} from "@builder.io/qwik";
-import { Input } from "../../internal/input";
-import {
+  type InputWrapperProps,
+  type InputProps,
   InputWrapper,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
-  type OmittedInputWrapperProps,
+  Input,
 } from "~/internal";
 
-export type TextInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
+export type TextInputSubProps = {
+  input?: InputProps;
 };
 
-export type TextInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-};
-
-export type TextInputProps = OmittedInputWrapperProps & {
-  styles?: TextInputStyles;
-  classNames?: TextInputClassNames;
+export type TextInputProps = InputWrapperProps & {
+  subProps?: TextInputSubProps;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -35,8 +22,7 @@ export type TextInputProps = OmittedInputWrapperProps & {
 
 export const TextInput = component$<TextInputProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     label,
     description,
     error,
@@ -50,25 +36,22 @@ export const TextInput = component$<TextInputProps>(
     return (
       <InputWrapper
         inputId={randomId}
-        styles={styles?.wrapper}
-        classNames={classNames?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <Input
           id={randomId}
-          style={styles?.input}
-          class={classNames?.input}
-          error={!!error}
+          invalid={!!error}
           disabled={disabled}
           type="text"
           onInput$={(_, element) => {
             if (onChange$) onChange$(element.value);
           }}
-          {...props}
+          {...subProps?.input}
         />
       </InputWrapper>
     );

@@ -70,6 +70,85 @@ body {
   }
 }
 
-p {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: underline;
+  color: rgb(var(--primary-color-6));
+}
+
+b {
+  font-weight: bold;
+}
+
+i {
+  font-style: italic;
+}
+
+h1 {
+  font-size: var(--qui-h1-font-size);
+  line-height: var(--qui-h1-line-height);
+  font-weight: var(--qui-h1-font-weight);
+}
+
+h2 {
+  font-size: var(--qui-h2-font-size);
+  line-height: var(--qui-h2-line-height);
+  font-weight: var(--qui-h2-font-weight);
+}
+
+h3 {
+  font-size: var(--qui-h3-font-size);
+  line-height: var(--qui-h3-line-height);
+  font-weight: var(--qui-h3-font-weight);
+}
+
+h4 {
+  font-size: var(--qui-h4-font-size);
+  line-height: var(--qui-h4-line-height);
+  font-weight: var(--qui-h4-font-weight);
+}
+
+h5 {
+  font-size: var(--qui-h5-font-size);
+  line-height: var(--qui-h5-line-height);
+  font-weight: var(--qui-h5-font-weight);
+}
+
+h6 {
+  font-size: var(--qui-h6-font-size);
+  line-height: var(--qui-h6-line-height);
+  font-weight: var(--qui-h6-font-weight);
+}
+
+ul,
+ol {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 0.5rem;
+  margin-block-end: 0.5rem;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 2rem;
+}
+
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+li {
+  display: list-item;
+  text-align: match-parent;
 }

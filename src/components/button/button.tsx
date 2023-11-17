@@ -1,43 +1,36 @@
 import {
   component$,
   Slot,
-  type CSSProperties,
   type QwikIntrinsicElements,
   type Component,
 } from "@builder.io/qwik";
-import { type QuiSize, getSize, QuiColor, getColor } from "~/internal";
-import clsx from "clsx";
-import classes from "./button.module.scss";
+import {
+  type QuiSize,
+  getSize,
+  QuiColor,
+  getColor,
+  inject,
+  classBuilder,
+} from "~/internal";
+import styles from "./button.module.scss";
 import type { JSX } from "@builder.io/qwik/jsx-runtime";
-import { Loader } from "../loader";
+import { Loader, LoaderProps } from "../loader";
 import { ButtonGroup } from "./buttonGroup";
 
 export type ButtonCompound = {
   Group: typeof ButtonGroup;
 };
 
-export type ButtonStyles = {
-  root?: CSSProperties;
-  inner?: CSSProperties;
-  loaderWrapper?: CSSProperties;
-  loader?: CSSProperties;
-};
-
-export type ButtonClassNames = {
-  root?: string;
-  inner?: string;
-  loaderWrapper?: string;
-  loader?: string;
+export type ButtonSubProps = {
+  inner?: QwikIntrinsicElements["div"];
+  loaderWrapper?: QwikIntrinsicElements["div"];
+  loader?: LoaderProps;
 };
 
 export type ButtonVariants = "filled" | "light" | "outline";
 
-export type ButtonProps = Omit<
-  QwikIntrinsicElements["button"],
-  "style" | "class" | "color"
-> & {
-  styles?: ButtonStyles;
-  classNames?: ButtonClassNames;
+export type ButtonProps = QwikIntrinsicElements["button"] & {
+  subProps?: ButtonSubProps;
   size?: QuiSize;
   color?: QuiColor;
   variant?: ButtonVariants;
@@ -47,10 +40,11 @@ export type ButtonProps = Omit<
   fullWidth?: boolean;
 };
 
+const cb = classBuilder(styles);
+
 export const _Button = component$<ButtonProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     size = "md",
     color,
     variant = "filled",
@@ -63,44 +57,24 @@ export const _Button = component$<ButtonProps>(
     ...props
   }) => (
     <button
-      style={{
-        "--qui-button-size": getSize(size),
-        ...getColor(color),
-        ...styles?.root,
-      }}
-      class={clsx(
-        classes.root,
-        classes[`root--variant-${variant}`],
-        {
-          [classes["root--disabled"]]: disabled,
-          [classes["root--loading"]]: loading,
-          [classes["root--compact"]]: compact,
-          [classes["root--full-width"]]: fullWidth,
-        },
-        classNames?.root
-      )}
       disabled={disabled || loading}
       type={type}
-      {...props}
+      {...inject(props, {
+        style: [`--qui-button-size: ${getSize(size)}`, getColor(color)],
+        class: cb("root", { variant, disabled, loading, compact, fullWidth }),
+      })}
     >
       {icon ? icon : <></>}
-      <div style={styles?.inner} class={classNames?.inner}>
+      <div {...subProps?.inner}>
         <Slot />
       </div>
       {loading && (
         <div
-          style={styles?.loaderWrapper}
-          class={clsx(
-            classes["root__loader-wrapper"],
-            classNames?.loaderWrapper
-          )}
+          {...inject(subProps?.loaderWrapper, {
+            class: styles["loader-wrapper"],
+          })}
         >
-          <Loader
-            style={styles?.loader}
-            class={classNames?.loader}
-            size={size}
-            color="current"
-          />
+          <Loader size={size} color="current" {...subProps?.loader} />
         </div>
       )}
     </button>

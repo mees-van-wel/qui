@@ -1,10 +1,15 @@
-import { component$, Slot, CSSProperties } from "@builder.io/qwik";
+import { component$, Slot, QwikIntrinsicElements } from "@builder.io/qwik";
 import type { JSX } from "@builder.io/qwik/jsx-runtime";
-import { CloseIcon, QuiColor, getColor } from "~/internal";
-import clsx from "clsx";
-import classes from "./notification.module.scss";
-import { Group } from "../group";
-import { Loader } from "../loader";
+import {
+  CloseIcon,
+  type CloseIconProps,
+  QuiColor,
+  getColor,
+  inject,
+} from "~/internal";
+import styles from "./notification.module.scss";
+import { Group, GroupProps } from "../group";
+import { Loader, LoaderProps } from "../loader";
 
 // const ICON_MAP: Record<NotificationVariant, JSX.Element> = {
 //   info: <IconInfoCircle class="w-4 text-white" />,
@@ -13,25 +18,16 @@ import { Loader } from "../loader";
 //   error: <IconX class="w-4 text-white" />,
 // };
 
-export type NotificationStyles = {
-  root?: CSSProperties;
-  iconWrapper?: CSSProperties;
-  loader?: CSSProperties;
-  title?: string;
-  closeIcon?: CSSProperties;
+export type NotificationSubProps = {
+  iconWrapper?: QwikIntrinsicElements["div"];
+  header?: GroupProps;
+  loader?: LoaderProps;
+  title?: QwikIntrinsicElements["p"];
+  closeIcon?: CloseIconProps;
 };
 
-export type NotificationClassnames = {
-  root?: string;
-  iconWrapper?: string;
-  loader?: string;
-  title?: string;
-  closeIcon?: string;
-};
-
-export type NotificationProps = {
-  styles?: NotificationStyles;
-  classNames?: NotificationClassnames;
+export type NotificationProps = QwikIntrinsicElements["div"] & {
+  subProps?: NotificationSubProps;
   title?: string;
   color?: QuiColor;
   icon?: JSX.Element;
@@ -40,46 +36,39 @@ export type NotificationProps = {
 };
 
 export const Notification = component$<NotificationProps>(
-  ({ styles, classNames, title, color, icon, loading, onClose$ }) => (
+  ({ subProps, title, color, icon, loading, onClose$, ...props }) => (
     <div
-      style={{
-        ...getColor(color),
-        ...styles?.root,
-      }}
-      class={clsx(classes.root, classNames?.root)}
+      {...inject(props, {
+        style: getColor(color),
+        class: styles.root,
+      })}
     >
       <Group
         gap="xs"
-        style={{
-          paddingRight: onClose$ ? "1.5rem" : undefined,
-        }}
+        {...inject(subProps?.header, {
+          style: {
+            paddingRight: onClose$ ? "1.5rem" : undefined,
+          },
+        })}
       >
         {(icon || loading) && (
           <div
-            style={styles?.iconWrapper}
-            class={clsx(classes["root__icon-wrapper"], classNames?.iconWrapper)}
+            {...inject(subProps?.iconWrapper, {
+              class: styles["icon-wrapper"],
+            })}
           >
-            {loading ? <Loader color="current" /> : icon}
+            {loading ? <Loader color="current" {...subProps?.loader} /> : icon}
           </div>
         )}
         {title ? (
-          <p
-            style={styles?.title}
-            class={clsx(classes["root__title"], classNames?.title)}
-          >
-            {title}
-          </p>
+          <p {...inject(subProps?.title, { class: styles.title })}>{title}</p>
         ) : (
           <Slot />
         )}
       </Group>
       {title && <Slot />}
       {onClose$ && (
-        <CloseIcon
-          style={styles?.closeIcon}
-          class={classNames?.closeIcon}
-          onClick$={onClose$}
-        />
+        <CloseIcon {...inject(subProps?.closeIcon, { onClick$: onClose$ })} />
       )}
     </div>
   )

@@ -1,3 +1,5 @@
+export type Falsy = 0 | "" | null | undefined | false;
+
 export type Color = [
   string,
   string,

@@ -1,16 +1,14 @@
-import {
-  type CSSProperties,
-  type QwikIntrinsicElements,
-  Slot,
-  component$,
-} from "@builder.io/qwik";
-import clsx from "clsx";
-import classes from "./paper.module.scss";
+import { type QwikIntrinsicElements, Slot, component$ } from "@builder.io/qwik";
+import styles from "./paper.module.scss";
+import { classBuilder, inject } from "~/internal";
 
-export type PaperVariants = "foreground" | "background";
+export type PaperVariants =
+  | "foreground"
+  | "midground"
+  | "background"
+  | "neutral";
 
-export type PaperProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type PaperProps = QwikIntrinsicElements["div"] & {
   component?: string;
   variant?: PaperVariants;
   glass?: boolean;
@@ -18,31 +16,15 @@ export type PaperProps = Omit<QwikIntrinsicElements["div"], "style"> & {
   fullWidth?: boolean;
 };
 
+const cb = classBuilder(styles);
+
 export const Paper = component$<PaperProps>(
-  ({
-    style,
-    class: className,
-    variant = "foreground",
-    glass,
-    noPadding,
-    fullWidth,
-    ...props
-  }) => (
+  ({ variant = "foreground", glass, noPadding, fullWidth, ...props }) => (
     <div
-      style={{
-        "--qui-paper-background-color": `var(--qui-color-${variant})`,
-        ...style,
-      }}
-      class={clsx(
-        classes.root,
-        {
-          [classes["root--glass"]]: glass,
-          [classes["root--no-padding"]]: noPadding,
-          [classes["root--full-width"]]: fullWidth,
-        },
-        className
-      )}
-      {...props}
+      {...inject(props, {
+        style: `--qui-paper-background-color: var(--qui-color-${variant})`,
+        class: cb("root", { glass, noPadding, fullWidth }),
+      })}
     >
       <Slot />
     </div>

@@ -7,35 +7,30 @@ import {
   noSerialize,
   useTask$,
   useContext,
-  CSSProperties,
+  $,
+  type QwikIntrinsicElements,
 } from "@builder.io/qwik";
 import {
-  type OmittedInputWrapperProps,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
   InputWrapper,
   CloseIcon,
+  type InputProps,
+  type CloseIconProps,
+  type InputWrapperProps,
+  inject,
+  classBuilder,
 } from "~/internal";
-import clsx from "clsx";
 import { UiContext } from "~/context";
-import commonClasses from "~/common.module.scss";
-import classes from "./fileInput.module.scss";
+import commonStyles from "~/common.module.scss";
+import styles from "./fileInput.module.scss";
 
-export type FileInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
-  closeIcon?: CSSProperties;
+export type FileInputSubProps = {
+  input?: InputProps;
+  button?: QwikIntrinsicElements["button"];
+  closeIcon?: CloseIconProps;
 };
 
-export type FileInputClasses = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-  closeIcon?: string;
-};
-
-export type FileInputProps = OmittedInputWrapperProps & {
-  styles?: FileInputStyles;
-  classNames?: FileInputClasses;
+export type FileInputProps = InputWrapperProps & {
+  subProps?: FileInputSubProps;
   autoFocus?: boolean;
   name?: string;
   accept?: string;
@@ -73,10 +68,11 @@ export type FileInputProps = OmittedInputWrapperProps & {
 //       }
 //   );
 
+const cb = classBuilder(commonStyles);
+
 export const FileInput = component$<FileInputProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     label,
     description,
     error,
@@ -87,58 +83,58 @@ export const FileInput = component$<FileInputProps>(
     onChange$,
     ...props
   }) => {
-    const files = useSignal<NoSerialize<FileList | File> | null>(
-      value ? noSerialize(value) : null
-    );
-
     const element = useSignal<HTMLInputElement>();
     const randomId = useId();
     const { strings } = useContext(UiContext);
+    const files = useSignal<NoSerialize<FileList | File> | null>(
+      value ? noSerialize(value) : null
+    );
 
     useTask$(({ track }) => {
       track(() => value);
       files.value = value ? noSerialize(value) : null;
     });
 
+    const changeHandler = $((_: Event, element: HTMLInputElement) => {
+      const formattedValue =
+        (multiple ? element.files : element.files?.[0]) || null;
+      if (required && !formattedValue) return;
+
+      files.value = formattedValue ? noSerialize(formattedValue) : null;
+      if (onChange$) onChange$(formattedValue);
+    });
+
     return (
       <InputWrapper
         inputId={randomId}
-        classNames={classNames?.wrapper}
-        styles={styles?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <input
-          class={classes.input}
+          class={styles.input}
           ref={element}
           id={randomId}
           disabled={disabled}
           type="file"
           multiple={multiple}
-          onChange$={(_, element) => {
-            const formattedValue =
-              (multiple ? element.files : element.files?.[0]) || null;
-            if (required && !formattedValue) return;
-
-            files.value = formattedValue ? noSerialize(formattedValue) : null;
-            // @ts-ignore
-            if (onChange$) onChange$(formattedValue);
-          }}
-          {...props}
+          {...inject(subProps?.input, { onChange$: changeHandler })}
         />
         <button
           type="button"
-          style={styles?.input}
-          class={clsx(commonClasses.input, classes.button, classNames?.input, {
-            [commonClasses["input--error"]]: error && !disabled,
-          })}
-          onClick$={() => {
-            element.value?.click();
-          }}
           disabled={disabled}
+          {...inject(subProps?.button, {
+            class: [
+              cb(commonStyles.input, { error: error && !disabled }),
+              styles.button,
+            ],
+            onClick$: $(() => {
+              element.value?.click();
+            }),
+          })}
         >
           {files.value
             ? files.value instanceof File
@@ -150,12 +146,12 @@ export const FileInput = component$<FileInputProps>(
         </button>
         {!required && files.value && (
           <CloseIcon
-            style={styles?.closeIcon}
-            class={classNames?.closeIcon}
-            onClick$={() => {
-              files.value = null;
-              if (onChange$) onChange$(null);
-            }}
+            {...inject(subProps?.closeIcon, {
+              onClick$: $(() => {
+                files.value = null;
+                if (onChange$) onChange$(null);
+              }),
+            })}
           />
         )}
       </InputWrapper>

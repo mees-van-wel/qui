@@ -1,15 +1,8 @@
 import type { QRL } from "@builder.io/qwik";
 import { type Signal, createContextId } from "@builder.io/qwik";
-import type {
-  SelectInputProps,
-  SelectOption,
-  SelectValue,
-} from "./selectInput";
+import type { SelectOption, SelectValue } from "./selectInput";
 
-export type SelectInputContext = Pick<
-  SelectInputProps,
-  "classNames" | "styles"
-> & {
+export type SelectInputContext = {
   filteredOptions: Readonly<Signal<SelectOption[]>>;
   searchValue: Signal<string | null>;
   selectedOption: Signal<SelectValue | SelectValue[] | undefined>;

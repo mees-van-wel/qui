@@ -8,24 +8,25 @@ import {
   useContextProvider,
   Signal,
   useTask$,
-  type CSSProperties,
+  QwikIntrinsicElements,
+  QwikKeyboardEvent,
 } from "@builder.io/qwik";
 import {
-  type OmittedInputWrapperProps,
-  type InputWrapperClassNames,
-  type InputWrapperStyles,
   InputProps,
   InputWrapper,
   CloseIcon,
   Input,
   IconChevronDown,
   IconX,
+  InputWrapperProps,
+  inject,
+  classBuilder,
 } from "~/internal";
 import clsx from "clsx";
-import { Group } from "../group";
-import { Dropdown } from "./dropdown";
+import { Group, type GroupProps } from "../group";
+import { Dropdown, type DropdownProps } from "./dropdown";
 import { SelectInputContext } from "./selectInputContext";
-import commonClasses from "~/common.module.scss";
+import commonStyles from "~/common.module.scss";
 import classes from "./selectInput.module.scss";
 import { Floater } from "../floater";
 
@@ -38,27 +39,19 @@ export interface SelectOption {
   group?: string;
 }
 
-export type SelectInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
-  icon?: CSSProperties;
-  dropdown?: CSSProperties;
-  option?: CSSProperties;
+export type SelectInputSubProps = {
+  multipleWrapper?: GroupProps;
+  multipleItem?: QwikIntrinsicElements["div"];
+  input?: InputProps;
+  icon?: QwikIntrinsicElements["svg"];
+  dropdown?: DropdownProps;
+  // option?: OptionProps;
 };
 
-export type SelectInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-  icon?: string;
-  dropdown?: string;
-  option?: string;
-};
-
-export type SelectInputProps = OmittedInputWrapperProps & {
+export type SelectInputProps = InputWrapperProps & {
+  subProps?: SelectInputSubProps;
   data: SelectOption[];
   onSearch$?: (search: string) => void;
-  classNames?: SelectInputClassNames;
-  styles?: SelectInputStyles;
   dropdownState?: Signal<boolean>;
   tabIndex?: number;
   noFilter?: boolean;
@@ -95,16 +88,17 @@ export type SelectInputProps = OmittedInputWrapperProps & {
 //       }
 //   );
 
+const cb = classBuilder(classes);
+
 // TODO Dropdown over parent elements (see phone input on login screen)
 export const SelectInput = component$<SelectInputProps>(
   ({
+    subProps,
     data,
     onChange$,
     onSearch$,
     value,
     multiple,
-    classNames,
-    styles,
     label,
     description,
     error,
@@ -114,6 +108,7 @@ export const SelectInput = component$<SelectInputProps>(
     tabIndex,
     noFilter,
     onClear$,
+    ...props
   }) => {
     const relativeRef = useSignal<HTMLInputElement>();
     const inputRef = useSignal<HTMLInputElement>();
@@ -186,7 +181,7 @@ export const SelectInput = component$<SelectInputProps>(
       if (onSearch$) onSearch$(target.value);
     });
 
-    const keyDownHandler = $((event: KeyboardEvent) => {
+    const keyDownHandler = $((event: QwikKeyboardEvent<HTMLInputElement>) => {
       const getNextIndex = (currentIndex: number, step: number) =>
         (currentIndex + step + filteredOptions.value.length) %
         filteredOptions.value.length;
@@ -195,11 +190,11 @@ export const SelectInput = component$<SelectInputProps>(
         ? filteredOptions.value.findIndex(
             ({ value }) => value === selectedOption.value
           )
-        : event.code === "ArrowUp"
+        : event.key === "ArrowUp"
         ? 0
         : -1;
 
-      switch (event.code) {
+      switch (event.key) {
         case "Enter":
           if (filteredOptions.value.length) {
             const optionValue =
@@ -242,8 +237,6 @@ export const SelectInput = component$<SelectInputProps>(
     });
 
     useContextProvider(SelectInputContext, {
-      classNames,
-      styles,
       filteredOptions,
       searchValue,
       selectedOption,
@@ -303,7 +296,7 @@ export const SelectInput = component$<SelectInputProps>(
       onFocus$: $(() => {
         open.value = true;
       }),
-      error: !!error,
+      invalid: !!error,
       disabled,
       required,
       tabIndex,
@@ -312,13 +305,12 @@ export const SelectInput = component$<SelectInputProps>(
     return (
       <InputWrapper
         inputId={randomId}
-        classNames={classNames?.wrapper}
-        styles={styles?.wrapper}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         {multiple ? (
           <Group
@@ -327,23 +319,24 @@ export const SelectInput = component$<SelectInputProps>(
             onClick$={() => {
               inputRef.value?.focus();
             }}
-            style={styles?.input}
-            class={clsx(
-              commonClasses.input,
-              classes["multiple-wrapper"],
-              {
-                [commonClasses["input--error"]]: error && !disabled,
-                [classes["multiple-wrapper--open"]]: open.value,
-                [classes["multiple-wrapper--disabled"]]: disabled,
-              },
-              classNames?.input
-            )}
+            {...inject(subProps?.multipleWrapper, {
+              class: [
+                commonStyles.input,
+                {
+                  [commonStyles["input--error"]]: error && !disabled,
+                },
+                cb("multiple-wrapper", {
+                  open: open.value,
+                  disabled,
+                }),
+              ],
+            })}
           >
             {value?.map((singleValue) => (
               <div
                 key={singleValue}
-                class={clsx(classes["multiple-item"], {
-                  [classes["multiple-item--disabled"]]: disabled,
+                {...inject(subProps?.multipleItem, {
+                  class: cb("multiple-item", { disabled }),
                 })}
               >
                 <p>
@@ -400,7 +393,10 @@ export const SelectInput = component$<SelectInputProps>(
             />
           ))}
         {open.value && (filteredOptions.value.length || searchValue.value) && (
-          <Floater relativeRef={multiple ? relativeRef : inputRef}>
+          <Floater
+            relativeRef={multiple ? relativeRef : inputRef}
+            placement="bottom-start"
+          >
             <Dropdown ref={popupRef} />
           </Floater>
         )}

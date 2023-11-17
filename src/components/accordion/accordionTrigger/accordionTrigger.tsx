@@ -1,53 +1,46 @@
 import {
   component$,
-  type CSSProperties,
   type QwikIntrinsicElements,
   Slot,
+  $,
 } from "@builder.io/qwik";
 import {
   useAccordionContext,
   useAccordionItemContext,
 } from "../accordionContext";
 import cslx from "clsx";
-import classes from "./accordionTrigger.module.scss";
-import { IconChevronDown } from "~/internal";
+import styles from "./accordionTrigger.module.scss";
+import { IconChevronDown, classBuilder, inject } from "~/internal";
 
-export type AccordionTriggerProps = Omit<
-  QwikIntrinsicElements["button"],
-  "style"
-> & {
-  style?: CSSProperties;
-};
+export type AccordionTriggerProps = QwikIntrinsicElements["button"];
 
-export const AccordionTrigger = component$<AccordionTriggerProps>(
-  ({ class: className, ...props }) => {
-    const accordionContext = useAccordionContext();
-    const { id } = useAccordionItemContext();
+const cb = classBuilder(styles);
 
-    return (
-      <button
-        class={cslx(
-          classes.root,
-          {
-            [classes["root--active"]]: accordionContext.items[id],
-          },
-          className
-        )}
-        onClick$={() => {
-          accordionContext.items[id] = !accordionContext.items[id];
+export const AccordionTrigger = component$<AccordionTriggerProps>((props) => {
+  const accordionContext = useAccordionContext();
+  const { id } = useAccordionItemContext();
 
-          if (!accordionContext.multiple)
-            Object.keys(accordionContext.items)
-              .filter((key) => key !== id)
-              .forEach((key) => {
-                accordionContext.items[key] = false;
-              });
-        }}
-        {...props}
-      >
-        <Slot />
-        <IconChevronDown class={cslx(classes.icon)} />
-      </button>
-    );
-  }
-);
+  const clickHandler = $(() => {
+    accordionContext.items[id] = !accordionContext.items[id];
+
+    if (accordionContext.multiple) return;
+
+    Object.keys(accordionContext.items)
+      .filter((key) => key !== id)
+      .forEach((key) => {
+        accordionContext.items[key] = false;
+      });
+  });
+
+  return (
+    <button
+      {...inject(props, {
+        class: cb("root", { active: accordionContext.items[id] }),
+        onClick$: clickHandler,
+      })}
+    >
+      <Slot />
+      <IconChevronDown class={cslx(styles.icon)} />
+    </button>
+  );
+});

@@ -1,43 +1,28 @@
+import { type Signal, component$, useId, useSignal, $ } from "@builder.io/qwik";
 import {
-  type Signal,
-  component$,
-  useId,
-  useSignal,
-  $,
-  CSSProperties,
-} from "@builder.io/qwik";
-import {
-  type InputWrapperStyles,
-  type InputWrapperClassNames,
-  type OmittedInputWrapperProps,
+  type InputWrapperProps,
+  type CloseIconProps,
+  type InputProps,
   InputWrapper,
   Input,
   CloseIcon,
+  inject,
 } from "~/internal";
 
-export type DateInputStyles = {
-  wrapper?: InputWrapperStyles;
-  input?: CSSProperties;
-  closeIcon?: CSSProperties;
+export type DateInputSubProps = {
+  input?: InputProps;
+  closeIcon?: CloseIconProps;
 };
 
-export type DateInputClassNames = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-  closeIcon?: string;
-};
-
-export type DateInputProps = Omit<OmittedInputWrapperProps, "required"> & {
-  styles?: DateInputStyles;
-  classNames?: DateInputClassNames;
+export type DateInputProps = InputWrapperProps & {
+  subProps?: DateInputSubProps;
   value?: Date | null;
   autoFocus?: boolean;
   name?: string;
   placeholder?: string;
-  noIcon?: boolean;
-  ref?: Signal<HTMLInputElement | undefined>;
-  required?: boolean;
   onChange$?: (value: Date | null) => void;
+  ref?: Signal<HTMLInputElement | undefined>;
+  noIcon?: boolean;
 };
 // TODO Conditional function prop type https://github.com/BuilderIO/qwik/issues/3719
 // & (
@@ -59,17 +44,16 @@ export const dateToDateString = (date: Date) =>
 
 export const DateInput = component$<DateInputProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     label,
     description,
     error,
     required,
     disabled,
-    ref,
-    noIcon,
     value,
     onChange$,
+    ref,
+    noIcon,
     ...props
   }) => {
     const randomId = useId();
@@ -94,21 +78,18 @@ export const DateInput = component$<DateInputProps>(
 
     return (
       <InputWrapper
-        styles={styles?.wrapper}
-        classNames={classNames?.wrapper}
         inputId={randomId}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <Input
-          style={styles?.input}
-          class={classNames?.input}
           ref={inputRef}
           id={randomId}
-          error={!!error}
+          invalid={!!error}
           disabled={disabled}
           type={disabled && !value ? "text" : "date"}
           onFocus$={() => {
@@ -123,13 +104,13 @@ export const DateInput = component$<DateInputProps>(
               : undefined
           }
           onChange$={changeHandler}
-          {...props}
+          {...subProps?.input}
         />
         {!required && value && !noIcon && (
           <CloseIcon
-            style={styles?.closeIcon}
-            class={classNames?.closeIcon}
-            onClick$={clearHandler}
+            {...inject(subProps?.closeIcon, {
+              onClick$: clearHandler,
+            })}
           />
         )}
       </InputWrapper>

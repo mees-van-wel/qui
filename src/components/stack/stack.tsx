@@ -4,35 +4,26 @@ import {
   type CSSProperties,
   type QwikIntrinsicElements,
 } from "@builder.io/qwik";
-import clsx from "clsx";
-import classes from "./stack.module.scss";
-import { type QuiSize, getSize } from "~/internal";
+import styles from "./stack.module.scss";
+import { type QuiSize, getSize, inject } from "~/internal";
 
-export type StackProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type StackProps = QwikIntrinsicElements["div"] & {
   align?: CSSProperties["alignItems"];
   justify?: CSSProperties["justifyContent"];
   gap?: QuiSize;
 };
 
 export const Stack = component$<StackProps>(
-  ({
-    style,
-    class: className,
-    align = "flex-start",
-    justify = "stretch",
-    gap = "md",
-    ...props
-  }) => (
+  ({ align = "flex-start", justify = "stretch", gap = "md", ...props }) => (
     <div
-      style={{
-        "--qui-stack-align": align,
-        "--qui-stack-justify": justify,
-        "--qui-stack-gap": getSize(gap),
-        ...style,
-      }}
-      class={clsx(classes.root, className)}
-      {...props}
+      {...inject(props, {
+        style: [
+          `--qui-stack-align: ${align}`,
+          `--qui-stack-justify: ${justify}`,
+          `--qui-stack-gap: ${getSize(gap)}`,
+        ],
+        class: styles.root,
+      })}
     >
       <Slot />
     </div>

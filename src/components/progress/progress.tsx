@@ -1,35 +1,14 @@
+import { type QwikIntrinsicElements, component$ } from "@builder.io/qwik";
+import { QuiSize, getSize, inject } from "~/internal";
+import styles from "./progress.module.scss";
 import {
-  type CSSProperties,
-  type QwikIntrinsicElements,
-  component$,
-} from "@builder.io/qwik";
-import clsx from "clsx";
-import { QuiColor, QuiSize, getSize, getColor } from "~/internal";
-import classes from "./progress.module.scss";
+  ProgressSection,
+  type Section,
+  type ProgressSectionProps,
+} from "./progressSection";
 
-export type ProgressStyles = {
-  root?: CSSProperties;
-  section?: CSSProperties;
-};
-
-export type ProgressClassNames = {
-  root?: string;
-  section?: string;
-};
-
-type BaseProgressProps = Omit<
-  QwikIntrinsicElements["div"],
-  "style" | "class"
-> & {
-  styles?: ProgressStyles;
-  classNames?: ProgressClassNames;
+type BaseProgressProps = QwikIntrinsicElements["div"] & {
   size?: QuiSize;
-};
-
-type Section = {
-  value: number;
-  color?: QuiColor;
-  label?: string;
 };
 
 type WithSections = {
@@ -38,10 +17,16 @@ type WithSections = {
   value?: never;
   color?: never;
   label?: never;
+  subProps?: {
+    sections?: (ProgressSectionProps | undefined)[];
+  };
 };
 
 type WithoutSections = Section & {
   sections?: never;
+  subProps?: {
+    section?: ProgressSectionProps;
+  };
   animated?: boolean;
 };
 
@@ -50,8 +35,7 @@ export type ProgressProps = BaseProgressProps &
 
 export const Progress = component$<ProgressProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     size = "md",
     value,
     color,
@@ -61,51 +45,30 @@ export const Progress = component$<ProgressProps>(
     ...props
   }) => (
     <div
-      style={{
-        "--qui-progress-size": getSize(size),
-        ...styles?.root,
-      }}
-      class={clsx(classes.root, classNames?.root)}
-      {...props}
+      {...inject(props, {
+        style: `--qui-progress-size: ${getSize(size)}`,
+        class: styles.root,
+      })}
     >
       {Array.isArray(sections) ? (
-        sections.map((section, index) => (
+        sections.map(({ value, color, label }, index) => (
           <ProgressSection
             key={index}
-            {...section}
-            style={styles?.section}
-            class={classNames?.section}
+            value={value}
+            color={color}
+            label={label}
+            {...subProps?.sections?.[index]}
           />
         ))
       ) : (
-        // @ts-ignore
-        <ProgressSection value={value} color={color} label={label} />
+        <ProgressSection
+          value={value}
+          color={color}
+          label={label}
+          {...subProps?.section}
+        />
       )}
-      {animated && <div class={classes["root__animation"]} />}
-    </div>
-  )
-);
-
-export type ProgressSectionProps = Section & {
-  style: CSSProperties | undefined;
-  class: string | undefined;
-};
-
-const ProgressSection = component$<ProgressSectionProps>(
-  ({ style, class: className, value, color, label }) => (
-    <div
-      role="progressbar"
-      aria-valuenow={value}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      style={{
-        "--qui-progress-section-width": `${value}%`,
-        ...getColor(color),
-        ...style,
-      }}
-      class={clsx(classes["root__section"], className)}
-    >
-      {label}
+      {animated && <div class={styles.animation} />}
     </div>
   )
 );
