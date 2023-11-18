@@ -1,6 +1,6 @@
 .root {
   font-size: var(--qui-loader-size);
-  color: var(--color-6);
+  color: var(--qui-color-6);
 
   :global(body[data-theme="dark"]) & {
     color: var(--qui-color-8);

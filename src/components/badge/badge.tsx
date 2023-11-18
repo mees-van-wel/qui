@@ -48,5 +48,5 @@ export const Badge = component$<BadgeProps>(
         <Slot />
       </div>
     </div>
-  )
+  ),
 );

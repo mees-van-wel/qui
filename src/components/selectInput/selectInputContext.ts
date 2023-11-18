@@ -11,5 +11,5 @@ export type SelectInputContext = {
 };
 
 export const SelectInputContext = createContextId<SelectInputContext>(
-  "dev.hexa-it.qwik-ui.selectInput"
+  "dev.hexa-it.qwik-ui.selectInput",
 );

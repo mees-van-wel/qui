@@ -1,41 +1,36 @@
-import { type CSSProperties, Slot, component$ } from "@builder.io/qwik";
-import { Paper } from "../paper";
-import { Button, type ButtonClassNames, type ButtonStyles } from "../button";
-import { Title } from "../title";
+import {
+  Slot,
+  component$,
+  type QwikIntrinsicElements,
+  $,
+} from "@builder.io/qwik";
+import { Paper, type PaperProps } from "../paper";
+import { Button, type ButtonProps } from "../button";
+import { Title, type TitleProps } from "../title";
 import { useLocalStorage } from "../../hooks";
-import { Stack } from "../stack";
-import clsx from "clsx";
-import { IconEye, IconEyeOff } from "~/internal";
-import classes from "./sheet.module.scss";
+import { Stack, StackProps } from "../stack";
+import { IconEye, IconEyeOff, classBuilder, inject } from "~/internal";
+import styles from "./sheet.module.scss";
 
-export type SheetStyles = {
-  root?: CSSProperties;
-  titleWrapper?: CSSProperties;
-  title?: CSSProperties;
-  button?: ButtonStyles;
-  icon?: CSSProperties;
-  content?: CSSProperties;
+export type SheetSubProps = {
+  titleWrapper?: PaperProps;
+  title?: TitleProps;
+  button?: ButtonProps;
+  icon?: QwikIntrinsicElements["svg"];
+  content?: PaperProps;
 };
 
-export type SheetClassNames = {
-  root?: string;
-  titleWrapper?: string;
-  title?: string;
-  button?: ButtonClassNames;
-  icon?: string;
-  content?: string;
-};
-
-export type SheetProps = {
-  styles?: SheetStyles;
-  classNames?: SheetClassNames;
+export type SheetProps = StackProps & {
+  subProps?: SheetSubProps;
   title: string;
   showDefault?: boolean;
   glass?: boolean;
 };
 
+const cb = classBuilder(styles);
+
 export const Sheet = component$<SheetProps>(
-  ({ classNames, styles, title, showDefault, glass }) => {
+  ({ subProps, title, showDefault, glass, ...props }) => {
     const { current: showSignal, isInitialized } = useLocalStorage<
       boolean | undefined
     >({
@@ -45,80 +40,69 @@ export const Sheet = component$<SheetProps>(
 
     if (!isInitialized.value) return null;
 
-    const isOpen = !!(showSignal.value === undefined || showSignal.value);
+    const open = !!(showSignal.value === undefined || showSignal.value);
 
     return (
       <Stack
-        style={styles?.root}
-        class={clsx(
-          classes.root,
-          {
-            [classes["root--open"]]: isOpen,
-            [classes["root--closed"]]: !isOpen,
-            [classes["root--default"]]: showDefault !== undefined,
-          },
-          classNames?.root
-        )}
         align="flex-start"
         justify="flex-start"
         gap={0}
+        {...inject(props, {
+          class: cb("root", {
+            open,
+            closed: !open,
+            default: showDefault !== undefined,
+          }),
+        })}
       >
         <Paper
-          style={styles?.titleWrapper}
-          class={clsx(classes["root__title-wrapper"], classNames?.titleWrapper)}
           glass={glass}
+          {...inject(subProps?.titleWrapper, {
+            class: styles["title-wrapper"],
+          })}
         >
           <Title
-            style={styles?.title}
-            class={clsx(classes["root__title"], classNames?.title)}
             order={4}
+            {...inject(subProps?.title, {
+              class: styles.title,
+            })}
           >
             {title}
           </Title>
           {showDefault !== undefined && (
             <Button
-              styles={styles?.button}
-              classNames={{
-                root: clsx(classes["root__button"], classNames?.button?.root),
-                inner: clsx(
-                  classes["root__button__inner"],
-                  classNames?.button?.inner
-                ),
-                ...classNames?.button,
-              }}
               variant="light"
-              onClick$={() => {
-                showSignal.value = !showSignal.value;
-              }}
+              {...inject(subProps?.button, {
+                subProps: { inner: { class: styles["button-inner"] } },
+                class: styles.button,
+                onClick$: $(() => {
+                  showSignal.value = !showSignal.value;
+                }),
+              })}
             >
               <IconEye
-                style={styles?.icon}
-                class={clsx(
-                  classes["root__icon"],
-                  classes["root__icon-open"],
-                  classNames?.icon
-                )}
+                {...inject(subProps?.icon, {
+                  class: cb("icon", { open: true }),
+                })}
               />
               <IconEyeOff
-                style={styles?.icon}
-                class={clsx(
-                  classes["root__icon"],
-                  classes["root__icon-close"],
-                  classNames?.icon
-                )}
+                {...inject(subProps?.icon, {
+                  class: cb("icon", { close: true }),
+                })}
               />
             </Button>
           )}
         </Paper>
         <Paper
-          style={styles?.content}
-          class={clsx(classes["root__content"], classNames?.content)}
           glass={glass}
           fullWidth
+          {...inject(subProps?.content, {
+            class: styles.content,
+          })}
         >
           <div
-            class={clsx("overflow-hidden", {
-              "overflow-auto": isOpen && showDefault === undefined,
+            class={cb("content-inner", {
+              open: open && showDefault === undefined,
             })}
           >
             <Slot />
@@ -126,5 +110,5 @@ export const Sheet = component$<SheetProps>(
         </Paper>
       </Stack>
     );
-  }
+  },
 );

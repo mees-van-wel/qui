@@ -72,5 +72,5 @@ export const InputWrapper = component$<InputWrapperProps>(
         </p>
       )}
     </div>
-  )
+  ),
 );

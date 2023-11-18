@@ -28,5 +28,5 @@ export const Paper = component$<PaperProps>(
     >
       <Slot />
     </div>
-  )
+  ),
 );

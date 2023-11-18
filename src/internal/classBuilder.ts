@@ -11,6 +11,6 @@ export const classBuilder =
           ? styles[`${element}--${camelToKebab(key)}-${camelToKebab(value)}`]
           : value
           ? styles[`${element}--${camelToKebab(key)}`]
-          : undefined
+          : undefined,
       ),
     ].join(" ");

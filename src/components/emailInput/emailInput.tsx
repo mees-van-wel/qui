@@ -60,5 +60,5 @@ export const EmailInput = component$<EmailInputProps>(
         />
       </InputWrapper>
     );
-  }
+  },
 );

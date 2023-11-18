@@ -54,11 +54,11 @@ export const NumberInput = component$<NumberInputProps>(
       (_: QwikFocusEvent<HTMLInputElement>, element: HTMLInputElement) => {
         if (element.value && decimal && !isNaN(Number(element.value)))
           element.value = parseFloat(
-            element.value.replace(",", ".")
+            element.value.replace(",", "."),
           ).toLocaleString(locale, {
             minimumFractionDigits: 2,
           });
-      }
+      },
     );
 
     const inputHandler = $(
@@ -84,7 +84,7 @@ export const NumberInput = component$<NumberInputProps>(
 
         if (onChange$ && !isNaN(Number(processedValue)))
           onChange$(+processedValue);
-      }
+      },
     );
 
     return (
@@ -112,5 +112,5 @@ export const NumberInput = component$<NumberInputProps>(
         />
       </InputWrapper>
     );
-  }
+  },
 );

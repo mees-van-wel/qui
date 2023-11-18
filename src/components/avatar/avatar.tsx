@@ -47,5 +47,5 @@ export const Avatar = component$<AvatarProps>(
         )}
       </div>
     );
-  }
+  },
 );

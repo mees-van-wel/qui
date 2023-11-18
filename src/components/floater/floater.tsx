@@ -17,6 +17,7 @@ import {
   type Placement,
 } from "@floating-ui/dom";
 import { getZIndex, inject } from "~/internal";
+import styles from "./floater.module.scss";
 
 export type FloaterProps = QwikIntrinsicElements["div"] & {
   relativeRef?: Signal<HTMLElement | undefined>;
@@ -60,7 +61,7 @@ export const Floater = component$<FloaterProps>(
       const clean = autoUpdate(
         relativeRef.value,
         floaterRef.value,
-        updatePosition
+        updatePosition,
       );
 
       cleanup(() => {
@@ -73,17 +74,24 @@ export const Floater = component$<FloaterProps>(
         ref={floaterRef}
         {...inject(props, {
           style: {
-            position,
-            opacity: !relativeRef || floaterPosition.top !== undefined ? 1 : 0,
-            "z-index": getZIndex(),
-            left: !relativeRef ? undefined : `${floaterPosition.left}px`,
-            top: !relativeRef ? undefined : `${floaterPosition.top}px`,
-            inset: !relativeRef ? 0 : undefined,
+            "--qui-floater-position": position,
+            "--qui-floater-opacity":
+              !relativeRef || floaterPosition.top !== undefined ? 1 : 0,
+            "--qui-floater-z-index": getZIndex(),
+            ...(relativeRef
+              ? {
+                  left: `${floaterPosition.left}px`,
+                  top: `${floaterPosition.top}px`,
+                }
+              : {
+                  inset: 0,
+                }),
           },
+          class: styles.root,
         })}
       >
         <Slot />
       </div>
     );
-  }
+  },
 );

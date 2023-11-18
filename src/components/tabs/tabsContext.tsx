@@ -6,7 +6,7 @@ export type TabsContext = {
 };
 
 export const TabsContext = createContextId<TabsContext>(
-  "dev.hexa-it.qwik-ui.tabs"
+  "dev.hexa-it.qwik-ui.tabs",
 );
 
 export const useTabsContext = () => {

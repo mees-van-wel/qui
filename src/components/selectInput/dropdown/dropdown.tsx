@@ -26,8 +26,8 @@ export const Dropdown = component$<DropdownProps>(({ ref, onClick$ }) => {
     filteredOptions.value.reduce<string[]>(
       (array, { group }) =>
         group && !array.includes(group) ? [...array, group] : array,
-      []
-    )
+      [],
+    ),
   );
 
   return (

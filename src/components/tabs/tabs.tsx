@@ -1,5 +1,4 @@
 import {
-  type CSSProperties,
   type Component,
   Slot,
   useContextProvider,
@@ -8,12 +7,12 @@ import {
   component$,
   type QwikIntrinsicElements,
 } from "@builder.io/qwik";
-import cslx from "clsx";
 import { TabsList } from "./tabsList";
 import { TabsContent } from "./tabsContent";
 import { TabsTab } from "./tabsTab";
 import { TabsContext } from "./tabsContext";
-import classes from "./tabs.module.scss";
+import styles from "./tabs.module.scss";
+import { classBuilder, inject } from "~/internal";
 
 export type TabsCompound = {
   List: typeof TabsList;
@@ -21,21 +20,16 @@ export type TabsCompound = {
   Content: typeof TabsContent;
 };
 
-export type TabsProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type TabsProps = QwikIntrinsicElements["div"] & {
   defaultValue?: string;
   onChange$?: (value: string) => void;
   orientation?: "horizontal" | "vertical";
 };
 
+const cb = classBuilder(styles);
+
 const _Tabs = component$<TabsProps>(
-  ({
-    class: className,
-    defaultValue,
-    onChange$,
-    orientation = "horizontal",
-    ...props
-  }) => {
+  ({ defaultValue, onChange$, orientation = "horizontal", ...props }) => {
     const currentTab = useSignal(defaultValue);
 
     useContextProvider(TabsContext, {
@@ -51,19 +45,14 @@ const _Tabs = component$<TabsProps>(
 
     return (
       <div
-        class={cslx(
-          classes.root,
-          {
-            [classes["root--vertical"]]: orientation === "vertical",
-          },
-          className
-        )}
-        {...props}
+        {...inject(props, {
+          class: cb("root", { vertical: orientation === "vertical" }),
+        })}
       >
         <Slot />
       </div>
     );
-  }
+  },
 ) as Component<TabsProps> & TabsCompound;
 
 _Tabs.List = TabsList;

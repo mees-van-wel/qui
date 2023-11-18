@@ -27,7 +27,7 @@ export const Checkbox = component$<CheckboxProps>(
               onChange$(
                 el.checked
                   ? [...(value || []), option.value].sort()
-                  : (value || []).filter((val) => val !== option.value).sort()
+                  : (value || []).filter((val) => val !== option.value).sort(),
               );
           }}
           id={randomId}
@@ -48,5 +48,5 @@ export const Checkbox = component$<CheckboxProps>(
         </div>
       </Group>
     );
-  }
+  },
 );

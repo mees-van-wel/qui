@@ -29,5 +29,5 @@ export const AccordionItem = component$<AccordionItemProps>(
         <Slot />
       </div>
     );
-  }
+  },
 );

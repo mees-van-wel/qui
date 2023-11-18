@@ -42,7 +42,7 @@ export const Modal = component$<ModalProps>(
       "keydown",
       $((e) => {
         if ((e as KeyboardEvent).code === "Escape") closeHandler();
-      })
+      }),
     );
 
     if (!signal.value) return null;
@@ -90,5 +90,5 @@ export const Modal = component$<ModalProps>(
         </Paper>
       </Floater>
     );
-  }
+  },
 );

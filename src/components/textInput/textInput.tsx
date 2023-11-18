@@ -55,5 +55,5 @@ export const TextInput = component$<TextInputProps>(
         />
       </InputWrapper>
     );
-  }
+  },
 );

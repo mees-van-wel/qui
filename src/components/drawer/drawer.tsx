@@ -23,17 +23,17 @@ export type DrawerSubProps = {
 
 export type DrawerProps = FloaterProps & {
   subProps?: DrawerSubProps;
-  state: Signal<boolean>;
+  signal: Signal<boolean>;
   title: string;
   noClose?: boolean;
 };
 
 export const Drawer = component$<DrawerProps>(
-  ({ subProps, state, title, noClose, ...props }) => {
+  ({ subProps, signal, title, noClose, ...props }) => {
     const ref = useSignal<HTMLElement>();
 
     const closeHandler = $(() => {
-      if (!noClose && state.value)
+      if (!noClose && signal.value)
         ref.value?.classList.add(styles["root--closed"]);
     });
 
@@ -41,10 +41,10 @@ export const Drawer = component$<DrawerProps>(
       "keydown",
       $((e) => {
         if ((e as KeyboardEvent).code === "Escape") closeHandler();
-      })
+      }),
     );
 
-    if (!state.value) return null;
+    if (!signal.value) return null;
 
     return (
       <Floater
@@ -55,7 +55,7 @@ export const Drawer = component$<DrawerProps>(
           class: styles.root,
           onAnimationEnd$: $((e: AnimationEvent) => {
             if (e.animationName === styles.bgCloseAnimation)
-              state.value = false;
+              signal.value = false;
           }),
         })}
       >
@@ -86,5 +86,5 @@ export const Drawer = component$<DrawerProps>(
         </div>
       </Floater>
     );
-  }
+  },
 );

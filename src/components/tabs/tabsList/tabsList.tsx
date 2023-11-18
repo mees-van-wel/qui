@@ -1,34 +1,22 @@
-import {
-  component$,
-  type CSSProperties,
-  Slot,
-  type QwikIntrinsicElements,
-} from "@builder.io/qwik";
+import { component$, Slot, type QwikIntrinsicElements } from "@builder.io/qwik";
 import { useTabsContext } from "../tabsContext";
-import cslx from "clsx";
-import classes from "./tabsList.module.scss";
+import styles from "./tabsList.module.scss";
+import { classBuilder, inject } from "~/internal";
 
-export type TabsListProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
-};
+export type TabsListProps = QwikIntrinsicElements["div"];
 
-export const TabsList = component$<TabsListProps>(
-  ({ class: className, ...props }) => {
-    const { orientation } = useTabsContext();
+const cb = classBuilder(styles);
 
-    return (
-      <div
-        class={cslx(
-          classes.root,
-          {
-            [classes["root--vertical"]]: orientation === "vertical",
-          },
-          className
-        )}
-        {...props}
-      >
-        <Slot />
-      </div>
-    );
-  }
-);
+export const TabsList = component$<TabsListProps>((props) => {
+  const { orientation } = useTabsContext();
+
+  return (
+    <div
+      {...inject(props, {
+        class: cb("root", { vertical: orientation === "vertical" }),
+      })}
+    >
+      <Slot />
+    </div>
+  );
+});

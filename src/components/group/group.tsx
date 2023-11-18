@@ -28,16 +28,16 @@ export const Group = component$<GroupProps>(
   }) => (
     <div
       {...inject(props, {
-        style: {
-          alignItems: align,
-          justifyContent: justify,
-          flexWrap: wrap,
-          gap: getSize(gap),
-        },
+        style: [
+          `--qui-group-align: ${align}`,
+          `--qui-group-justify: ${justify}`,
+          `--qui-group-wrap: ${wrap}`,
+          `--qui-group-gap: ${getSize(gap)}`,
+        ],
         class: cb("root", { grow }),
       })}
     >
       <Slot />
     </div>
-  )
+  ),
 );

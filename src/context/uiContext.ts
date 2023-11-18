@@ -4,6 +4,7 @@ export type UiContext = {
   locale?: string;
   strings?: {
     nothingFound?: string;
+    selectFile?: string;
     selectFiles?: string;
   };
 };

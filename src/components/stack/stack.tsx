@@ -27,5 +27,5 @@ export const Stack = component$<StackProps>(
     >
       <Slot />
     </div>
-  )
+  ),
 );

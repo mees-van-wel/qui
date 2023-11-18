@@ -83,20 +83,20 @@ export const RichTextEditor = component$<RichTextEditorProps>(
           element: rootRef.value,
           onFocus: () => {
             const element = document.querySelector(
-              `.${styles.root}`
+              `.${styles.root}`,
             ) as Element;
             element.className = clsx(
               ...Array.from(element.classList),
-              "border-primary-6 dark:border-primary-8"
+              "border-primary-6 dark:border-primary-8",
             );
           },
           onBlur: () => {
             const element = document.querySelector(
-              `.${styles.root}`
+              `.${styles.root}`,
             ) as Element;
             element.classList.remove(
               "border-primary-6",
-              "dark:border-primary-8"
+              "dark:border-primary-8",
             );
             element.classList.add("border-transparent");
           },
@@ -122,7 +122,7 @@ export const RichTextEditor = component$<RichTextEditorProps>(
               id: randomId,
             },
           },
-        })
+        }),
       );
     });
 
@@ -156,7 +156,7 @@ export const RichTextEditor = component$<RichTextEditorProps>(
           !popupRef.value.contains(e.target as Node)
         )
           anchorPopupOpen.value = false;
-      })
+      }),
     );
 
     return (
@@ -174,7 +174,7 @@ export const RichTextEditor = component$<RichTextEditorProps>(
             class={clsx(
               styles.root,
               styles["root--disabled"],
-              commonStyles.input
+              commonStyles.input,
             )}
           />
         ) : (
@@ -454,7 +454,7 @@ export const RichTextEditor = component$<RichTextEditorProps>(
                   {
                     [commonStyles["input--error"]]: error,
                   },
-                  commonStyles.input
+                  commonStyles.input,
                 )}
               />
             </Stack>
@@ -462,5 +462,5 @@ export const RichTextEditor = component$<RichTextEditorProps>(
         )}
       </InputWrapper>
     );
-  }
+  },
 );

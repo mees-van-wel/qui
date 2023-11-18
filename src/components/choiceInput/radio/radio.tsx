@@ -43,5 +43,5 @@ export const Radio = component$<RadioProps>(
         </div>
       </Group>
     );
-  }
+  },
 );

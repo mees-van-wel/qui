@@ -96,5 +96,5 @@ export const TimeInput = component$<TimeInputProps>(
         )}
       </InputWrapper>
     );
-  }
+  },
 );

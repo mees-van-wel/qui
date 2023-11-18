@@ -78,7 +78,7 @@ export const _Button = component$<ButtonProps>(
         </div>
       )}
     </button>
-  )
+  ),
 ) as Component<ButtonProps> & ButtonCompound;
 
 _Button.Group = ButtonGroup;

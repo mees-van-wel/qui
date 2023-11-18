@@ -71,5 +71,5 @@ export const Notification = component$<NotificationProps>(
         <CloseIcon {...inject(subProps?.closeIcon, { onClick$: onClose$ })} />
       )}
     </div>
-  )
+  ),
 );

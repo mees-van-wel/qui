@@ -23,7 +23,7 @@ const updateTime = (date: Date, time: string) => {
 
 export const dateToTimeString = (date: Date) =>
   `${String(date.getHours()).padStart(2, "0")}:${String(
-    date.getMinutes()
+    date.getMinutes(),
   ).padStart(2, "0")}`;
 
 export type DateTimeInputSubProps = {
@@ -120,25 +120,27 @@ export const DateTimeInput = component$<DateTimeInputProps>(
             onChange$: dateChangeHandler,
           })}
         />
-        <TimeInput
-          ref={timeInputRef}
-          value={value ? dateToTimeString(value) : undefined}
-          noIcon={!!value && !required}
-          required={required}
-          disabled={disabled}
-          {...inject(subProps?.timeInput, {
-            subProps: { input: { class: styles["time-input"] } },
-            onChange$: timeChangeHandler,
-          })}
-        />
-        {!disabled && !required && value && (
-          <CloseIcon
-            {...inject(subProps?.closeIcon, {
-              onClick$: clearHandler,
+        <div style="position: relative;">
+          <TimeInput
+            ref={timeInputRef}
+            value={value ? dateToTimeString(value) : undefined}
+            noIcon={!!value && !required}
+            required={required}
+            disabled={disabled}
+            {...inject(subProps?.timeInput, {
+              subProps: { input: { class: styles["time-input"] } },
+              onChange$: timeChangeHandler,
             })}
           />
-        )}
+          {!disabled && !required && value && (
+            <CloseIcon
+              {...inject(subProps?.closeIcon, {
+                onClick$: clearHandler,
+              })}
+            />
+          )}
+        </div>
       </InputWrapper>
     );
-  }
+  },
 );

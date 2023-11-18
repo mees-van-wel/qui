@@ -115,7 +115,7 @@ export const SelectInput = component$<SelectInputProps>(
     const popupRef = useSignal<HTMLDivElement>();
     const searchValue = useSignal<string | null>(null);
     const selectedOption = useSignal<SelectValue | SelectValue[] | undefined>(
-      value ?? undefined
+      value ?? undefined,
     );
     const inputValue = useSignal(value);
     const localDropdownState = useSignal(false);
@@ -146,7 +146,7 @@ export const SelectInput = component$<SelectInputProps>(
     const inputLabel = useComputed$(
       () =>
         data.find((option) => option.value === inputValue.value)?.label ||
-        (inputValue.value ? JSON.stringify(inputValue.value) : "")
+        (inputValue.value ? JSON.stringify(inputValue.value) : ""),
     );
 
     const changeHandler = $(
@@ -159,7 +159,7 @@ export const SelectInput = component$<SelectInputProps>(
           if (multiple) onChange$((value as SelectValue[]) ?? []);
           else onChange$((value as SelectValue) ?? null);
         }
-      }
+      },
     );
 
     const blurHandler = $(() => {
@@ -188,7 +188,7 @@ export const SelectInput = component$<SelectInputProps>(
 
       const currentIndex = selectedOption.value
         ? filteredOptions.value.findIndex(
-            ({ value }) => value === selectedOption.value
+            ({ value }) => value === selectedOption.value,
           )
         : event.key === "ArrowUp"
         ? 0
@@ -199,7 +199,7 @@ export const SelectInput = component$<SelectInputProps>(
           if (filteredOptions.value.length) {
             const optionValue =
               filteredOptions.value.find(
-                ({ value }) => selectedOption.value === value
+                ({ value }) => selectedOption.value === value,
               )?.value ?? filteredOptions.value[0]?.value;
 
             if (multiple)
@@ -208,7 +208,7 @@ export const SelectInput = component$<SelectInputProps>(
                   ? value
                     ? [...value, optionValue]
                     : [optionValue]
-                  : undefined
+                  : undefined,
               );
             else changeHandler(optionValue);
 
@@ -247,7 +247,7 @@ export const SelectInput = component$<SelectInputProps>(
             ? value
               ? [...value, selectValue]
               : [selectValue]
-            : selectValue
+            : selectValue,
         );
         if (!multiple) blurHandler();
       }),
@@ -347,7 +347,7 @@ export const SelectInput = component$<SelectInputProps>(
                     class={classes["multiple-item-icon"]}
                     onClick$={() => {
                       changeHandler(
-                        value.filter((current) => current !== singleValue)
+                        value.filter((current) => current !== singleValue),
                       );
                       if (onClear$) onClear$();
                     }}
@@ -402,5 +402,5 @@ export const SelectInput = component$<SelectInputProps>(
         )}
       </InputWrapper>
     );
-  }
+  },
 );

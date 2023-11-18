@@ -63,7 +63,7 @@ export const Popover = component$<PopoverProps>(
       "keydown",
       $((e) => {
         if (!hover && (e as KeyboardEvent).code === "Escape") closeHandler();
-      })
+      }),
     );
 
     useOnDocument(
@@ -75,7 +75,7 @@ export const Popover = component$<PopoverProps>(
           !contentRef.value?.contains(e.target as Node)
         )
           closeHandler();
-      })
+      }),
     );
 
     useUpdateTask(
@@ -85,7 +85,7 @@ export const Popover = component$<PopoverProps>(
       $(() => {
         if (signal?.value) openHandler();
         else closeHandler();
-      })
+      }),
     );
 
     useUpdateTask(
@@ -94,7 +94,7 @@ export const Popover = component$<PopoverProps>(
       }),
       $(() => {
         if (signal && signal.value !== open.value) signal.value = open.value;
-      })
+      }),
     );
 
     return (
@@ -139,5 +139,5 @@ export const Popover = component$<PopoverProps>(
         )}
       </div>
     );
-  }
+  },
 );

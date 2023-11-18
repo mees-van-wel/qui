@@ -24,5 +24,5 @@ export const ProgressSection = component$<ProgressSectionProps & Section>(
     >
       {label}
     </div>
-  )
+  ),
 );

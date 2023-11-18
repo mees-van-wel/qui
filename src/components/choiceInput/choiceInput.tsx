@@ -11,7 +11,7 @@ import { Stack } from "../stack";
 import { ChoiceContext } from "./choiceInputContext";
 import { ChoiceOption, ChoiceValue } from "./types";
 import { Checkbox } from "./checkbox";
-import classes from "./choiceInput.module.scss";
+import styles from "./choiceInput.module.scss";
 import { Radio } from "./radio";
 
 export type ChoiceInputSubProps = {
@@ -78,7 +78,7 @@ export const ChoiceInput = component$<ChoiceInputProps>(
         <Wrapper
           id={randomId}
           {...inject(subProps?.wrapper, {
-            class: classes.wrapper,
+            class: styles.wrapper,
           })}
         >
           {options.map((option) => (
@@ -93,5 +93,5 @@ export const ChoiceInput = component$<ChoiceInputProps>(
         </Wrapper>
       </InputWrapper>
     );
-  }
+  },
 );

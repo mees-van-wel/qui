@@ -60,11 +60,6 @@ export const PinInput = component$<PinInputProps>(
     });
 
     const pasteHandler = $(async () => {
-      // TODO Test if it works without this
-      // event: QwikClipboardEvent<HTMLDivElement>
-      // event.stopPropagation();
-      // event.preventDefault();
-
       const pastedData = await navigator.clipboard.readText();
       const formattedData = pastedData
         .replace(/\s/g, "")
@@ -94,7 +89,7 @@ export const PinInput = component$<PinInputProps>(
 
       const totalValue = Object.values(refs).reduce(
         (string, element) => string + element?.value,
-        ""
+        "",
       );
 
       if (onChange$ && totalValue.length === length) onChange$(totalValue);
@@ -128,14 +123,14 @@ export const PinInput = component$<PinInputProps>(
               tabIndex={index === 0 ? undefined : -1}
               autoFocus={autoFocus && index === 0}
               value={value ? value[index] : undefined}
+              ref={$((elementRef: any) => {
+                refs[index] = elementRef;
+              })}
               {...inject(subProps?.input, {
                 class: styles.input,
                 // TODO auto poputlate with typings from props
                 onFocus$: $((_, element) => {
                   if (!element.value) focusHandler();
-                }),
-                ref: $((elementRef: any) => {
-                  refs[index] = elementRef;
                 }),
                 onInput$: $((event, element) => {
                   event.preventDefault();
@@ -156,7 +151,7 @@ export const PinInput = component$<PinInputProps>(
                     previousInput.focus();
                     previousInput.setSelectionRange(
                       0,
-                      previousInput.value.length
+                      previousInput.value.length,
                     );
                   }
                 }),
@@ -166,5 +161,5 @@ export const PinInput = component$<PinInputProps>(
         </Group>
       </InputWrapper>
     );
-  }
+  },
 );

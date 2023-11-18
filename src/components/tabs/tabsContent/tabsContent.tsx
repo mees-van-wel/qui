@@ -1,35 +1,26 @@
-import {
-  component$,
-  type QwikIntrinsicElements,
-  Slot,
-  type CSSProperties,
-} from "@builder.io/qwik";
+import { component$, type QwikIntrinsicElements, Slot } from "@builder.io/qwik";
 import { useTabsContext } from "../tabsContext";
-import classes from "./tabsContent.module.scss";
-import cslx from "clsx";
+import styles from "./tabsContent.module.scss";
+import { classBuilder, inject } from "~/internal";
 
-export type TabsContentProps = Omit<QwikIntrinsicElements["div"], "style"> & {
-  style?: CSSProperties;
+export type TabsContentProps = QwikIntrinsicElements["div"] & {
   value: string;
 };
 
+const cb = classBuilder(styles);
+
 export const TabsContent = component$<TabsContentProps>(
-  ({ class: className, value, ...props }) => {
+  ({ value, ...props }) => {
     const { currentTab } = useTabsContext();
 
     return (
       <div
-        class={cslx(
-          classes.root,
-          {
-            [classes["root--hidden"]]: currentTab.value !== value,
-          },
-          className
-        )}
-        {...props}
+        {...inject(props, {
+          class: cb("root", { hidden: currentTab.value !== value }),
+        })}
       >
         <Slot />
       </div>
     );
-  }
+  },
 );

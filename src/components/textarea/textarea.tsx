@@ -1,31 +1,23 @@
 import {
   type Signal,
-  type CSSProperties,
   component$,
   useId,
+  QwikIntrinsicElements,
 } from "@builder.io/qwik";
 import {
-  type InputWrapperClassNames,
-  type OmittedInputWrapperProps,
-  type InputWrapperSubProps,
   InputWrapper,
+  classBuilder,
+  type InputWrapperProps,
+  inject,
 } from "~/internal";
 import commonStyles from "~/common.module.scss";
-import clsx from "clsx";
 
-export type TextareaStyles = {
-  wrapper?: InputWrapperSubProps;
-  input?: CSSProperties;
+export type TextareaSubProps = {
+  input?: QwikIntrinsicElements["textarea"];
 };
 
-export type TextareaClasses = {
-  wrapper?: InputWrapperClassNames;
-  input?: string;
-};
-
-export type TextareaProps = OmittedInputWrapperProps & {
-  styles?: TextareaStyles;
-  classNames?: TextareaClasses;
+export type TextareaProps = InputWrapperProps & {
+  subProps?: TextareaSubProps;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -34,10 +26,11 @@ export type TextareaProps = OmittedInputWrapperProps & {
   ref?: Signal<HTMLInputElement | undefined>;
 };
 
+const cb = classBuilder(commonStyles);
+
 export const Textarea = component$<TextareaProps>(
   ({
-    styles,
-    classNames,
+    subProps,
     label,
     description,
     error,
@@ -51,21 +44,16 @@ export const Textarea = component$<TextareaProps>(
 
     return (
       <InputWrapper
-        styles={styles?.wrapper}
-        classNames={classNames?.wrapper}
         inputId={randomId}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
+        {...props}
       >
         <textarea
           id={randomId}
-          style={styles?.input}
-          class={clsx(commonStyles.input, {
-            [commonStyles["input--error"]]: error && !disabled,
-          })}
           disabled={disabled}
           autoComplete="off"
           aria-invalid={!!error}
@@ -77,9 +65,11 @@ export const Textarea = component$<TextareaProps>(
             element.style.height = `${element.scrollHeight + 2}px`;
             if (onChange$) onChange$(element.value);
           }}
-          {...props}
+          {...inject(subProps?.input, {
+            class: cb("input", { error: !!error && !disabled }),
+          })}
         />
       </InputWrapper>
     );
-  }
+  },
 );

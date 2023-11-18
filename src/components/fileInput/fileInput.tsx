@@ -87,11 +87,13 @@ export const FileInput = component$<FileInputProps>(
     const randomId = useId();
     const { strings } = useContext(UiContext);
     const files = useSignal<NoSerialize<FileList | File> | null>(
-      value ? noSerialize(value) : null
+      value ? noSerialize(value) : null,
     );
 
     useTask$(({ track }) => {
+      // eslint-disable-next-line qwik/valid-lexical-scope
       track(() => value);
+      // eslint-disable-next-line qwik/valid-lexical-scope
       files.value = value ? noSerialize(value) : null;
     });
 
@@ -115,22 +117,21 @@ export const FileInput = component$<FileInputProps>(
         {...props}
       >
         <input
-          class={styles.input}
           ref={element}
           id={randomId}
           disabled={disabled}
           type="file"
           multiple={multiple}
-          {...inject(subProps?.input, { onChange$: changeHandler })}
+          {...inject(subProps?.input, {
+            class: styles.input,
+            onChange$: changeHandler,
+          })}
         />
         <button
           type="button"
           disabled={disabled}
           {...inject(subProps?.button, {
-            class: [
-              cb(commonStyles.input, { error: error && !disabled }),
-              styles.button,
-            ],
+            class: [cb("input", { error: error && !disabled }), styles.button],
             onClick$: $(() => {
               element.value?.click();
             }),
@@ -142,7 +143,9 @@ export const FileInput = component$<FileInputProps>(
               : Array.from(files.value)
                   .map((file) => file.name)
                   .join(", ")
-            : strings?.selectFiles || "Select file(s)"}
+            : multiple
+            ? strings?.selectFiles || "Select files"
+            : strings?.selectFile || "Select file"}
         </button>
         {!required && files.value && (
           <CloseIcon
@@ -156,5 +159,5 @@ export const FileInput = component$<FileInputProps>(
         )}
       </InputWrapper>
     );
-  }
+  },
 );

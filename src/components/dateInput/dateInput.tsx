@@ -39,7 +39,7 @@ export type DateInputProps = InputWrapperProps & {
 export const dateToDateString = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
     2,
-    "0"
+    "0",
   )}-${String(date.getDate()).padStart(2, "0")}`;
 
 export const DateInput = component$<DateInputProps>(
@@ -115,5 +115,5 @@ export const DateInput = component$<DateInputProps>(
         )}
       </InputWrapper>
     );
-  }
+  },
 );

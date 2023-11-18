@@ -36,5 +36,5 @@ export const IconLoadingDots = component$<QwikIntrinsicElements["svg"]>(
         ></animate>
       </circle>
     </svg>
-  )
+  ),
 );

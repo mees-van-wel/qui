@@ -6,5 +6,5 @@ export type ChoiceContext = {
 };
 
 export const ChoiceContext = createContextId<ChoiceContext>(
-  "dev.hexa-it.qwik-ui.choice"
+  "dev.hexa-it.qwik-ui.choice",
 );

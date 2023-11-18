@@ -20,5 +20,5 @@ export const ColorSwatch = component$<ColorSwatchProps>(
         })}
       />
     );
-  }
+  },
 );

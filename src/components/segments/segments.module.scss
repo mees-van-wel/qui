@@ -44,14 +44,17 @@
   z-index: 1;
   font-size: var(--qui-segments-size);
   padding: calc(var(--qui-segments-size) / 2) var(--qui-segments-size);
-  color: rgb(from var(--qui-color-text) r g b / 60%);
+  color: var(--qui-color-neutral);
   transition:
     color 100ms,
     border-color 100ms,
     font-variation-settings 0.3s ease;
   border: none;
-  border-left: solid calc(var(--qui-segments-size) / 8 - 1px)
-    rgb(from var(--qui-color-text) r g b / 60%);
+
+  &:not(:first-of-type) {
+    border-left: solid calc(var(--qui-segments-size) / 8 - 1px)
+      var(--qui-color-neutral);
+  }
 
   &:hover:not(:disabled) {
     color: var(--qui-color-text);
@@ -75,9 +78,12 @@
 
   .root--vertical & {
     border-left: none;
-    border-top: solid calc(var(--qui-segments-size) / 8 - 1px)
-      rgb(from var(--qui-color-text) r g b / 60%);
     border-radius: 0;
+
+    &:not(:first-of-type) {
+      border-top: solid calc(var(--qui-segments-size) / 8 - 1px)
+        var(--qui-color-neutral);
+    }
   }
 
   &--previous-active {

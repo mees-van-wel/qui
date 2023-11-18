@@ -139,5 +139,5 @@ export const ColorInput = component$<ColorInputProps>(
         )}
       </InputWrapper>
     );
-  }
+  },
 );

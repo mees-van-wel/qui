@@ -63,7 +63,7 @@ export const Segments = component$<SegmentsProps>(
 
       const handleResize = () => {
         const segment = document.querySelector<HTMLElement>(
-          `#qui-segment-${randomId}-${currentValue.value}`
+          `#qui-segment-${randomId}-${currentValue.value}`,
         );
 
         if (!segment) return;
@@ -122,5 +122,5 @@ export const Segments = component$<SegmentsProps>(
         ))}
       </div>
     );
-  }
+  },
 );

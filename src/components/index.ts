@@ -23,7 +23,7 @@ export * from "./pinInput";
 export * from "./popover";
 export * from "./progress";
 export * from "./richTextEditor";
-// export * from "./selectInput";
+export * from "./selectInput";
 export * from "./sheet";
 export * from "./stack";
 export * from "./table";

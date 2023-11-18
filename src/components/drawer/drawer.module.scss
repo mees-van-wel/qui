@@ -11,7 +11,8 @@
 
 .wrapper {
   background-color: var(--qui-color-foreground);
-  width: 20%;
+  width: 100%;
+  max-width: 350px;
   animation: openAnimation 500ms ease-in-out forwards;
   overflow-y: auto;
 

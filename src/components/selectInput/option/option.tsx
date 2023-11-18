@@ -7,7 +7,7 @@ import classes from "./option.module.scss";
 export type OptionProps = {
   option: SelectOption;
   onClick$?: (value: SelectValue | SelectValue[]) => void;
-}
+};
 
 export const Option = component$<OptionProps>(({ option }) => {
   const { classNames, styles, selectedOption, inputValue, select } =
@@ -17,16 +17,12 @@ export const Option = component$<OptionProps>(({ option }) => {
     <button
       type="button"
       key={option.value}
-      class={clsx(
-        classes.root,
-        classNames?.option,
-        {
-          "bg-primary-6/80 text-white dark:bg-primary-8/80":
-            selectedOption.value === option.value,
-          "bg-primary-6 text-white dark:bg-primary-8":
-            inputValue.value === option.value,
-        }
-      )}
+      class={clsx(classes.root, classNames?.option, {
+        "bg-primary-6/80 text-white dark:bg-primary-8/80":
+          selectedOption.value === option.value,
+        "bg-primary-6 text-white dark:bg-primary-8":
+          inputValue.value === option.value,
+      })}
       style={styles?.option}
       onClick$={() => {
         select(option.value);
@@ -41,7 +37,7 @@ export const Option = component$<OptionProps>(({ option }) => {
               "text-white/60":
                 selectedOption.value === option.value ||
                 inputValue.value === option.value,
-            }
+            },
           )}
         >
           {option.description}

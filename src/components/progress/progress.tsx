@@ -70,5 +70,5 @@ export const Progress = component$<ProgressProps>(
       )}
       {animated && <div class={styles.animation} />}
     </div>
-  )
+  ),
 );

@@ -1,11 +1,11 @@
 import type { QwikIntrinsicElements } from "@builder.io/qwik";
 import { Slot, component$ } from "@builder.io/qwik";
-import cslx from "clsx";
-import classes from "./table.module.scss";
+import styles from "./table.module.scss";
+import { inject } from "~/internal";
 
 export const Table = component$<QwikIntrinsicElements["table"]>((props) => {
   return (
-    <table class={cslx(classes.root, props.class)} {...props}>
+    <table {...inject(props, { class: styles.root })}>
       <Slot />
     </table>
   );
