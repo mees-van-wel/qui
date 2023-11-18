@@ -19,6 +19,7 @@ export const Input = component$<InputProps>(
     const { locale } = useContext(UiContext);
 
     return (
+      // @ts-ignore Prop error
       <input
         lang={locale}
         disabled={disabled}

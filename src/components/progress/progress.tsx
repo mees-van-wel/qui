@@ -57,6 +57,7 @@ export const Progress = component$<ProgressProps>(
             value={value}
             color={color}
             label={label}
+            // @ts-ignore DUT
             {...subProps?.sections?.[index]}
           />
         ))
@@ -65,6 +66,7 @@ export const Progress = component$<ProgressProps>(
           value={value}
           color={color}
           label={label}
+          // @ts-ignore DUT
           {...subProps?.section}
         />
       )}

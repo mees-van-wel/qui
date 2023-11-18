@@ -43,14 +43,18 @@ type Class = clsx.ClassValue | Falsy;
 //   return newProps;
 // }
 
-type Inject<T> = {
+type Base<T extends { [key in keyof T]: any }> = {
   style?: Style | Style[];
   class?: Class | Class[];
-} & Omit<T, "style" | "class">;
+} & {
+  [key in keyof Omit<T, "style" | "class">]: T[key];
+} & {
+  subProps?: keyof T;
+};
 
 export const inject = <T>(
-  props: T | undefined = {},
-  inject: Inject<T>,
+  props: Base<T> | undefined,
+  inject: Base<T>,
   debug?: boolean,
 ) => {
   const newProps = { ...props };
@@ -58,10 +62,11 @@ export const inject = <T>(
   if (inject.style) {
     newProps.style = (
       Array.isArray(inject.style)
-        ? [...inject.style, props.style]
-        : [inject.style, props.style]
+        ? [...inject.style, props?.style]
+        : [inject.style, props?.style]
     ).reduce(
       (acc, style) => ({
+        // @ts-ignore reduce type bug
         ...acc,
         ...(typeof style === "string" ? parse(style) : style),
       }),
@@ -72,19 +77,24 @@ export const inject = <T>(
   if (inject.class) {
     newProps.class = clsx(
       Array.isArray(inject.class)
-        ? [...inject.class, props.class]
-        : [inject.class, props.class],
+        ? [...inject.class, props?.class]
+        : [inject.class, props?.class],
     );
   }
 
-  if (inject.subProps && props.subProps) {
+  if (inject.subProps && props?.subProps) {
+    // @ts-ignore merge types
     newProps.subProps = merge(inject.subProps, props.subProps);
   }
 
-  Object.entries(inject).forEach(([key, value]) => {
-    if (typeof value === "function" && typeof props[key] === "function") {
+  Object.entries(inject).forEach(([k, value]) => {
+    const key = k as keyof typeof inject;
+    if (typeof value === "function" && typeof props?.[key] === "function") {
+      // @ts-ignore function type
       newProps[key] = $((event: Event, element: Element) => {
+        // @ts-ignore function type
         inject[key](event, element);
+        // @ts-ignore function type
         props[key](event, element);
       });
     }

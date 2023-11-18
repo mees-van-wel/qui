@@ -129,32 +129,31 @@ export const PinInput = component$<PinInputProps>(
               {...inject(subProps?.input, {
                 class: styles.input,
                 // TODO auto poputlate with typings from props
-                onFocus$: $((_, element) => {
+                onFocus$: $((_: Event, element: HTMLInputElement) => {
                   if (!element.value) focusHandler();
                 }),
-                onInput$: $((event, element) => {
+                onInput$: $((event: InputEvent, element: HTMLInputElement) => {
                   event.preventDefault();
                   if (event.inputType === "insertFromPaste") return;
                   changeHandler(element, index);
                 }),
-                onKeyDown$: $((event, element) => {
-                  if (
-                    (event as KeyboardEvent).code === "Backspace" &&
-                    index > 0
-                  ) {
-                    event.preventDefault();
+                onKeyDown$: $(
+                  (event: KeyboardEvent, element: HTMLInputElement) => {
+                    if (event.code === "Backspace" && index > 0) {
+                      event.preventDefault();
 
-                    if (element.value) element.value = "";
+                      if (element.value) element.value = "";
 
-                    const previousInput = refs[index - 1]!;
+                      const previousInput = refs[index - 1]!;
 
-                    previousInput.focus();
-                    previousInput.setSelectionRange(
-                      0,
-                      previousInput.value.length,
-                    );
-                  }
-                }),
+                      previousInput.focus();
+                      previousInput.setSelectionRange(
+                        0,
+                        previousInput.value.length,
+                      );
+                    }
+                  },
+                ),
               })}
             />
           ))}

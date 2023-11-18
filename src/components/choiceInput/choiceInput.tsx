@@ -86,6 +86,7 @@ export const ChoiceInput = component$<ChoiceInputProps>(
               invalid={!!error && !disabled}
               key={option.value}
               option={option}
+              // @ts-ignore DUT
               value={value}
               onChange$={onChange$}
             />

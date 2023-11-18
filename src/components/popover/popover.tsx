@@ -71,6 +71,7 @@ export const Popover = component$<PopoverProps>(
       $((e) => {
         if (
           !hover &&
+          // @ts-ignore Fix ref types
           !triggerRef.value?.contains(e.target as Node) &&
           !contentRef.value?.contains(e.target as Node)
         )
@@ -108,9 +109,10 @@ export const Popover = component$<PopoverProps>(
             onMouseOver$: $(() => {
               if (hover) openHandler();
             }),
-            onMouseOut$: $((event) => {
+            onMouseOut$: $((event: MouseEvent) => {
               if (
                 hover &&
+                // @ts-ignore Fix ref types
                 !triggerRef.value?.contains(event.relatedTarget as Node)
               )
                 closeHandler();
@@ -122,11 +124,12 @@ export const Popover = component$<PopoverProps>(
         {open.value && (
           <Floater
             ref={contentRef}
+            // @ts-ignore Fix ref types
             relativeRef={triggerRef}
             class={styles.floater}
             placement={position}
             {...inject(subProps?.floater, {
-              onAnimationEnd$: $((event) => {
+              onAnimationEnd$: $((event: AnimationEvent) => {
                 if (event.animationName === styles.closeAnimation)
                   open.value = false;
               }),
