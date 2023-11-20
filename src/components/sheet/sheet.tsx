@@ -110,5 +110,5 @@ export const Sheet = component$<SheetProps>(
         </Paper>
       </Stack>
     );
-  },
+  }
 );
