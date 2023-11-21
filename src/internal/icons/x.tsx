@@ -1,7 +1,7 @@
 import type { QwikIntrinsicElements } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
 
-export const IconX = component$<QwikIntrinsicElements["svg"]>((props) => (
+export const IconX = component$<QwikIntrinsicElements["div"]>((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-x"

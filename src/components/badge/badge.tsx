@@ -9,7 +9,7 @@ import {
 } from "~/internal";
 import styles from "./badge.module.scss";
 
-export type BadgeSubProps = {
+export type BadgeIntrinsic = {
   dot?: QwikIntrinsicElements["div"];
   inner?: QwikIntrinsicElements["div"];
 };
@@ -17,7 +17,7 @@ export type BadgeSubProps = {
 export type BadgeVariants = "filled" | "light" | "outline" | "dot";
 
 export type BadgeProps = QwikIntrinsicElements["div"] & {
-  subProps?: BadgeSubProps;
+  intrinsic?: BadgeIntrinsic;
   variant?: BadgeVariants;
   size?: QuiSize;
   color?: QuiColor;
@@ -28,7 +28,7 @@ const cb = classBuilder(styles);
 
 export const Badge = component$<BadgeProps>(
   ({
-    subProps,
+    intrinsic,
     variant = "filled",
     size = "md",
     color,
@@ -42,11 +42,11 @@ export const Badge = component$<BadgeProps>(
       })}
     >
       {variant === "dot" && (
-        <div {...inject(subProps?.dot, { class: styles.dot })} />
+        <div {...inject(intrinsic?.dot, { class: styles.dot })} />
       )}
-      <div {...inject(subProps?.inner, { class: styles.inner })}>
+      <div {...inject(intrinsic?.inner, { class: styles.inner })}>
         <Slot />
       </div>
     </div>
-  ),
+  )
 );

@@ -1,6 +1,6 @@
 import { component$, type QwikIntrinsicElements } from "@builder.io/qwik";
 
-export const IconAlignLeft = component$<QwikIntrinsicElements["svg"]>(
+export const IconAlignLeft = component$<QwikIntrinsicElements["div"]>(
   (props) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,5 +20,5 @@ export const IconAlignLeft = component$<QwikIntrinsicElements["svg"]>(
       <path d="M4 12l10 0"></path>
       <path d="M4 18l14 0"></path>
     </svg>
-  ),
+  )
 );

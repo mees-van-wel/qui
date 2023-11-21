@@ -14,7 +14,7 @@ import { component$, type QwikIntrinsicElements } from "@builder.io/qwik";
 export type LoaderVariants = "dots" | "ring";
 export type LoaderColors = "current" | QuiColor;
 
-export type LoaderProps = QwikIntrinsicElements["svg"] & {
+export type LoaderProps = QwikIntrinsicElements["div"] & {
   size?: QuiSize;
   color?: LoaderColors;
   variant?: LoaderVariants;
@@ -37,5 +37,5 @@ export const Loader = component$<LoaderProps>(
         })}
       />
     );
-  },
+  }
 );

@@ -16,12 +16,12 @@ import {
 import { Group } from "../group";
 import styles from "./pinInput.module.scss";
 
-export type PinInputSubProps = {
+export type PinInputIntrinsic = {
   input?: InputProps;
 };
 
 export type PinInputProps = InputWrapperProps & {
-  subProps?: PinInputSubProps;
+  intrinsic?: PinInputIntrinsic;
   length?: number;
   value?: string;
   autoFocus?: boolean;
@@ -32,7 +32,7 @@ export type PinInputProps = InputWrapperProps & {
 
 export const PinInput = component$<PinInputProps>(
   ({
-    subProps,
+    intrinsic,
     length = 4,
     label,
     description,
@@ -89,7 +89,7 @@ export const PinInput = component$<PinInputProps>(
 
       const totalValue = Object.values(refs).reduce(
         (string, element) => string + element?.value,
-        "",
+        ""
       );
 
       if (onChange$ && totalValue.length === length) onChange$(totalValue);
@@ -126,7 +126,7 @@ export const PinInput = component$<PinInputProps>(
               ref={$((elementRef: any) => {
                 refs[index] = elementRef;
               })}
-              {...inject(subProps?.input, {
+              {...inject(intrinsic?.input, {
                 class: styles.input,
                 // TODO auto poputlate with typings from props
                 onFocus$: $((_: Event, element: HTMLInputElement) => {
@@ -149,10 +149,10 @@ export const PinInput = component$<PinInputProps>(
                       previousInput.focus();
                       previousInput.setSelectionRange(
                         0,
-                        previousInput.value.length,
+                        previousInput.value.length
                       );
                     }
-                  },
+                  }
                 ),
               })}
             />
@@ -160,5 +160,5 @@ export const PinInput = component$<PinInputProps>(
         </Group>
       </InputWrapper>
     );
-  },
+  }
 );

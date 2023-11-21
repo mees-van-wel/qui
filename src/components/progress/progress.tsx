@@ -17,14 +17,14 @@ type WithSections = {
   value?: never;
   color?: never;
   label?: never;
-  subProps?: {
+  intrinsic?: {
     sections?: (ProgressSectionProps | undefined)[];
   };
 };
 
 type WithoutSections = Section & {
   sections?: never;
-  subProps?: {
+  intrinsic?: {
     section?: ProgressSectionProps;
   };
   animated?: boolean;
@@ -35,7 +35,7 @@ export type ProgressProps = BaseProgressProps &
 
 export const Progress = component$<ProgressProps>(
   ({
-    subProps,
+    intrinsic,
     size = "md",
     value,
     color,
@@ -58,7 +58,7 @@ export const Progress = component$<ProgressProps>(
             color={color}
             label={label}
             // @ts-ignore DUT
-            {...subProps?.sections?.[index]}
+            {...intrinsic?.sections?.[index]}
           />
         ))
       ) : (
@@ -67,10 +67,10 @@ export const Progress = component$<ProgressProps>(
           color={color}
           label={label}
           // @ts-ignore DUT
-          {...subProps?.section}
+          {...intrinsic?.section}
         />
       )}
       {animated && <div class={styles.animation} />}
     </div>
-  ),
+  )
 );

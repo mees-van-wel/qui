@@ -12,16 +12,16 @@ import { Stack, StackProps } from "../stack";
 import { IconEye, IconEyeOff, classBuilder, inject } from "~/internal";
 import styles from "./sheet.module.scss";
 
-export type SheetSubProps = {
+export type SheetIntrinsic = {
   titleWrapper?: PaperProps;
   title?: TitleProps;
   button?: ButtonProps;
-  icon?: QwikIntrinsicElements["svg"];
+  icon?: QwikIntrinsicElements["div"];
   content?: PaperProps;
 };
 
 export type SheetProps = StackProps & {
-  subProps?: SheetSubProps;
+  intrinsic?: SheetIntrinsic;
   title: string;
   showDefault?: boolean;
   glass?: boolean;
@@ -30,7 +30,7 @@ export type SheetProps = StackProps & {
 const cb = classBuilder(styles);
 
 export const Sheet = component$<SheetProps>(
-  ({ subProps, title, showDefault, glass, ...props }) => {
+  ({ intrinsic, title, showDefault, glass, ...props }) => {
     const { current: showSignal, isInitialized } = useLocalStorage<
       boolean | undefined
     >({
@@ -57,13 +57,13 @@ export const Sheet = component$<SheetProps>(
       >
         <Paper
           glass={glass}
-          {...inject(subProps?.titleWrapper, {
+          {...inject(intrinsic?.titleWrapper, {
             class: styles["title-wrapper"],
           })}
         >
           <Title
             order={4}
-            {...inject(subProps?.title, {
+            {...inject(intrinsic?.title, {
               class: styles.title,
             })}
           >
@@ -72,8 +72,8 @@ export const Sheet = component$<SheetProps>(
           {showDefault !== undefined && (
             <Button
               variant="light"
-              {...inject(subProps?.button, {
-                subProps: { inner: { class: styles["button-inner"] } },
+              {...inject(intrinsic?.button, {
+                intrinsic: { inner: { class: styles["button-inner"] } },
                 class: styles.button,
                 onClick$: $(() => {
                   showSignal.value = !showSignal.value;
@@ -81,12 +81,12 @@ export const Sheet = component$<SheetProps>(
               })}
             >
               <IconEye
-                {...inject(subProps?.icon, {
+                {...inject(intrinsic?.icon, {
                   class: cb("icon", { open: true }),
                 })}
               />
               <IconEyeOff
-                {...inject(subProps?.icon, {
+                {...inject(intrinsic?.icon, {
                   class: cb("icon", { close: true }),
                 })}
               />
@@ -96,7 +96,7 @@ export const Sheet = component$<SheetProps>(
         <Paper
           glass={glass}
           fullWidth
-          {...inject(subProps?.content, {
+          {...inject(intrinsic?.content, {
             class: styles.content,
           })}
         >

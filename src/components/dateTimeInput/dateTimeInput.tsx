@@ -23,17 +23,17 @@ const updateTime = (date: Date, time: string) => {
 
 export const dateToTimeString = (date: Date) =>
   `${String(date.getHours()).padStart(2, "0")}:${String(
-    date.getMinutes(),
+    date.getMinutes()
   ).padStart(2, "0")}`;
 
-export type DateTimeInputSubProps = {
+export type DateTimeInputIntrinsic = {
   dateInput?: DateInputProps;
   timeInput?: TimeInputProps;
   closeIcon?: CloseIconProps;
 };
 
 export type DateTimeInputProps = InputWrapperProps & {
-  subProps?: DateTimeInputSubProps;
+  intrinsic?: DateTimeInputIntrinsic;
   value?: Date | null;
   required?: boolean;
   onChange$?: (value: Date | null) => void;
@@ -52,7 +52,7 @@ export type DateTimeInputProps = InputWrapperProps & {
 
 export const DateTimeInput = component$<DateTimeInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -115,8 +115,8 @@ export const DateTimeInput = component$<DateTimeInputProps>(
           noIcon={!!value && !required}
           required={required}
           disabled={disabled}
-          {...inject(subProps?.dateInput, {
-            subProps: { input: { class: styles["date-input"] } },
+          {...inject(intrinsic?.dateInput, {
+            intrinsic: { input: { class: styles["date-input"] } },
             onChange$: dateChangeHandler,
           })}
         />
@@ -127,14 +127,14 @@ export const DateTimeInput = component$<DateTimeInputProps>(
             noIcon={!!value && !required}
             required={required}
             disabled={disabled}
-            {...inject(subProps?.timeInput, {
-              subProps: { input: { class: styles["time-input"] } },
+            {...inject(intrinsic?.timeInput, {
+              intrinsic: { input: { class: styles["time-input"] } },
               onChange$: timeChangeHandler,
             })}
           />
           {!disabled && !required && value && (
             <CloseIcon
-              {...inject(subProps?.closeIcon, {
+              {...inject(intrinsic?.closeIcon, {
                 onClick$: clearHandler,
               })}
             />
@@ -142,5 +142,5 @@ export const DateTimeInput = component$<DateTimeInputProps>(
         </div>
       </InputWrapper>
     );
-  },
+  }
 );

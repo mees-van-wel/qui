@@ -3,7 +3,7 @@ import { IconX } from "../icons";
 import styles from "./closeIcon.module.scss";
 import { inject } from "../inject";
 
-export type CloseIconProps = QwikIntrinsicElements["svg"];
+export type CloseIconProps = QwikIntrinsicElements["div"];
 
 export const CloseIcon = component$<CloseIconProps>((props) => (
   <IconX {...inject(props, { class: styles.root })} />

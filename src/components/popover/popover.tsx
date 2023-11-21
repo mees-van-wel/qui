@@ -15,14 +15,14 @@ import { Placement } from "@floating-ui/dom";
 import { inject } from "~/internal";
 import { useUpdateTask } from "~/hooks";
 
-export type PopoverSubProps = {
+export type PopoverIntrinsic = {
   trigger?: QwikIntrinsicElements["div"];
   floater?: FloaterProps;
   popover?: PaperProps;
 };
 
 export type PopoverProps = QwikIntrinsicElements["div"] & {
-  subProps?: PopoverSubProps;
+  intrinsic?: PopoverIntrinsic;
   trigger: JSX.Element;
   signal?: Signal<boolean>;
   position?: Placement;
@@ -32,7 +32,7 @@ export type PopoverProps = QwikIntrinsicElements["div"] & {
 
 export const Popover = component$<PopoverProps>(
   ({
-    subProps,
+    intrinsic,
     trigger,
     signal,
     hover,
@@ -41,9 +41,9 @@ export const Popover = component$<PopoverProps>(
     ...props
   }) => {
     const localTriggerRef = useSignal<HTMLElement>();
-    const triggerRef = subProps?.trigger?.ref || localTriggerRef;
+    const triggerRef = intrinsic?.trigger?.ref || localTriggerRef;
     const localContentRef = useSignal<HTMLElement>();
-    const contentRef = subProps?.floater?.ref || localContentRef;
+    const contentRef = intrinsic?.floater?.ref || localContentRef;
     const open = useSignal(!!defaultOpened);
 
     const openHandler = $(() => {
@@ -63,7 +63,7 @@ export const Popover = component$<PopoverProps>(
       "keydown",
       $((e) => {
         if (!hover && (e as KeyboardEvent).code === "Escape") closeHandler();
-      }),
+      })
     );
 
     useOnDocument(
@@ -76,7 +76,7 @@ export const Popover = component$<PopoverProps>(
           !contentRef.value?.contains(e.target as Node)
         )
           closeHandler();
-      }),
+      })
     );
 
     useUpdateTask(
@@ -86,7 +86,7 @@ export const Popover = component$<PopoverProps>(
       $(() => {
         if (signal?.value) openHandler();
         else closeHandler();
-      }),
+      })
     );
 
     useUpdateTask(
@@ -95,14 +95,14 @@ export const Popover = component$<PopoverProps>(
       }),
       $(() => {
         if (signal && signal.value !== open.value) signal.value = open.value;
-      }),
+      })
     );
 
     return (
       <div {...inject(props, { class: styles.root })}>
         <div
           ref={triggerRef}
-          {...inject(subProps?.trigger, {
+          {...inject(intrinsic?.trigger, {
             onClick$: $(() => {
               if (!hover) togglerHandler();
             }),
@@ -128,19 +128,19 @@ export const Popover = component$<PopoverProps>(
             relativeRef={triggerRef}
             class={styles.floater}
             placement={position}
-            {...inject(subProps?.floater, {
+            {...inject(intrinsic?.floater, {
               onAnimationEnd$: $((event: AnimationEvent) => {
                 if (event.animationName === styles.closeAnimation)
                   open.value = false;
               }),
             })}
           >
-            <Paper variant="midground" {...subProps?.popover}>
+            <Paper variant="midground" {...intrinsic?.popover}>
               <Slot />
             </Paper>
           </Floater>
         )}
       </div>
     );
-  },
+  }
 );

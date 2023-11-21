@@ -6,12 +6,12 @@ import {
   Input,
 } from "~/internal";
 
-export type TextInputSubProps = {
+export type TextInputIntrinsic = {
   input?: InputProps;
 };
 
 export type TextInputProps = InputWrapperProps & {
-  subProps?: TextInputSubProps;
+  intrinsic?: TextInputIntrinsic;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -22,7 +22,7 @@ export type TextInputProps = InputWrapperProps & {
 
 export const TextInput = component$<TextInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -51,9 +51,9 @@ export const TextInput = component$<TextInputProps>(
           onInput$={(_, element) => {
             if (onChange$) onChange$(element.value);
           }}
-          {...subProps?.input}
+          {...intrinsic?.input}
         />
       </InputWrapper>
     );
-  },
+  }
 );

@@ -1,11 +1,11 @@
 import { component$ } from "@builder.io/qwik";
-import { Paper, Tabs } from "./components";
+import { Paper, Stack } from "./components";
 import { UiContextProvider } from "./context";
 
 const Next = component$(() => {
   return (
     <>
-      <Tabs defaultValue="gallery">
+      {/* <Tabs defaultValue="gallery">
         <Tabs.List>
           <Tabs.Tab value="gallery">Gallery</Tabs.Tab>
           <Tabs.Tab value="messages">Messages</Tabs.Tab>
@@ -14,9 +14,33 @@ const Next = component$(() => {
         <Tabs.Content value="gallery">Gallery tab content</Tabs.Content>
         <Tabs.Content value="messages">Messages tab content</Tabs.Content>
         <Tabs.Content value="settings">Settings tab content</Tabs.Content>
-      </Tabs>
-      {/* <Stack align="stretch">
-        <Notification
+      </Tabs> */}
+      <Stack align="stretch">
+        {/* <SelectInput
+          multiple
+          value={signal.value}
+          onChange$={(value) => {
+            signal.value = value;
+          }}
+          data={[
+            {
+              group: "Monkey",
+              label: "Foo",
+              value: 1,
+            },
+            {
+              group: "Monkey",
+              label: "Bar",
+              value: 2,
+              description: "Lool",
+            },
+            {
+              label: "Baz",
+              value: 3,
+            },
+          ]}
+        /> */}
+        {/* <Notification
           title="Info"
           icon={<IconInfoCircle />}
           onClose$={() => {}}
@@ -46,8 +70,8 @@ const Next = component$(() => {
           onClose$={() => {}}
         >
           This is an Error message
-        </Notification> 
-      </Stack> */}
+        </Notification> */}
+      </Stack>
       {/* <Notification title="asasd" loading /> */}
       {/* <SelectInput
         multiple

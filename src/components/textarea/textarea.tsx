@@ -12,12 +12,12 @@ import {
 } from "~/internal";
 import commonStyles from "~/common.module.scss";
 
-export type TextareaSubProps = {
+export type TextareaIntrinsic = {
   input?: QwikIntrinsicElements["textarea"];
 };
 
 export type TextareaProps = InputWrapperProps & {
-  subProps?: TextareaSubProps;
+  intrinsic?: TextareaIntrinsic;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -30,7 +30,7 @@ const cb = classBuilder(commonStyles);
 
 export const Textarea = component$<TextareaProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -65,11 +65,11 @@ export const Textarea = component$<TextareaProps>(
             element.style.height = `${element.scrollHeight + 2}px`;
             if (onChange$) onChange$(element.value);
           }}
-          {...inject(subProps?.input, {
+          {...inject(intrinsic?.input, {
             class: cb("input", { error: !!error && !disabled }),
           })}
         />
       </InputWrapper>
     );
-  },
+  }
 );

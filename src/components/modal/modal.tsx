@@ -13,16 +13,16 @@ import { type TitleProps, Title } from "../title";
 import { IconX, QuiSize, getSize, inject } from "~/internal";
 import styles from "./modal.module.scss";
 
-export type ModalSubProps = {
+export type ModalIntrinsic = {
   wrapper?: PaperProps;
   header?: QwikIntrinsicElements["div"];
   title?: TitleProps;
-  closeIcon?: QwikIntrinsicElements["svg"];
+  closeIcon?: QwikIntrinsicElements["div"];
   inner?: QwikIntrinsicElements["div"];
 };
 
 export type ModalProps = FloaterProps & {
-  subProps?: ModalSubProps;
+  intrinsic?: ModalIntrinsic;
   signal: Signal<boolean>;
   title: string;
   size?: QuiSize;
@@ -30,7 +30,7 @@ export type ModalProps = FloaterProps & {
 };
 
 export const Modal = component$<ModalProps>(
-  ({ subProps, signal, title, size = "md", noClose, ...props }) => {
+  ({ intrinsic, signal, title, size = "md", noClose, ...props }) => {
     const ref = useSignal<HTMLElement>();
 
     const closeHandler = $(() => {
@@ -42,7 +42,7 @@ export const Modal = component$<ModalProps>(
       "keydown",
       $((e) => {
         if ((e as KeyboardEvent).code === "Escape") closeHandler();
-      }),
+      })
     );
 
     if (!signal.value) return null;
@@ -64,31 +64,31 @@ export const Modal = component$<ModalProps>(
         <Paper
           noPadding
           fullWidth
-          {...inject(subProps?.wrapper, {
+          {...inject(intrinsic?.wrapper, {
             class: styles.wrapper,
             onClick$: $((event: MouseEvent) => {
               event.stopPropagation();
             }),
           })}
         >
-          <div {...inject(subProps?.header, { class: styles.header })}>
-            <Title order={3} {...subProps?.title}>
+          <div {...inject(intrinsic?.header, { class: styles.header })}>
+            <Title order={3} {...intrinsic?.title}>
               {title}
             </Title>
             {!noClose && (
               <IconX
-                {...inject(subProps?.closeIcon, {
+                {...inject(intrinsic?.closeIcon, {
                   class: styles.closeIcon,
                   onClick$: closeHandler,
                 })}
               />
             )}
           </div>
-          <div {...inject(subProps?.inner, { class: styles.inner })}>
+          <div {...inject(intrinsic?.inner, { class: styles.inner })}>
             <Slot />
           </div>
         </Paper>
       </Floater>
     );
-  },
+  }
 );

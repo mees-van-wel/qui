@@ -16,12 +16,12 @@ import {
   inject,
 } from "~/internal";
 
-export type NumberInputSubProps = {
+export type NumberInputIntrinsic = {
   input?: InputProps;
 };
 
 export type NumberInputProps = InputWrapperProps & {
-  subProps?: NumberInputSubProps;
+  intrinsic?: NumberInputIntrinsic;
   value?: number | null;
   autoFocus?: boolean;
   decimal?: boolean;
@@ -36,7 +36,7 @@ const DECIMAL_SEPARATOR = ".";
 
 export const NumberInput = component$<NumberInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -54,11 +54,11 @@ export const NumberInput = component$<NumberInputProps>(
       (_: QwikFocusEvent<HTMLInputElement>, element: HTMLInputElement) => {
         if (element.value && decimal && !isNaN(Number(element.value)))
           element.value = parseFloat(
-            element.value.replace(",", "."),
+            element.value.replace(",", ".")
           ).toLocaleString(locale, {
             minimumFractionDigits: 2,
           });
-      },
+      }
     );
 
     const inputHandler = $(
@@ -84,7 +84,7 @@ export const NumberInput = component$<NumberInputProps>(
 
         if (onChange$ && !isNaN(Number(processedValue)))
           onChange$(+processedValue);
-      },
+      }
     );
 
     return (
@@ -105,12 +105,12 @@ export const NumberInput = component$<NumberInputProps>(
           pattern={decimal ? "^d*.?d*$" : "^[0-9]*$"}
           type="text"
           value={value?.toString()}
-          {...inject(subProps?.input, {
+          {...inject(intrinsic?.input, {
             onBlur$: blurHandler,
             onInput$: inputHandler,
           })}
         />
       </InputWrapper>
     );
-  },
+  }
 );

@@ -2,7 +2,7 @@ import { Slot, component$, QwikIntrinsicElements } from "@builder.io/qwik";
 import styles from "./inputWrapper.module.scss";
 import { inject } from "../inject";
 
-export type InputWrapperSubProps = {
+export type InputWrapperIntrinsic = {
   label?: QwikIntrinsicElements["label"];
   asterisk?: QwikIntrinsicElements["span"];
   description?: QwikIntrinsicElements["p"];
@@ -11,7 +11,7 @@ export type InputWrapperSubProps = {
 };
 
 export type InputWrapperProps = QwikIntrinsicElements["div"] & {
-  subProps?: InputWrapperSubProps;
+  intrinsic?: InputWrapperIntrinsic;
   inputId?: string;
   label?: string;
   description?: string;
@@ -27,7 +27,7 @@ export type OmittedInputWrapperProps = Omit<
 
 export const InputWrapper = component$<InputWrapperProps>(
   ({
-    subProps,
+    intrinsic,
     inputId,
     label,
     description,
@@ -41,11 +41,11 @@ export const InputWrapper = component$<InputWrapperProps>(
         <label
           id={inputId && `${inputId}-label`}
           for={inputId}
-          {...inject(subProps?.label, { class: styles.label })}
+          {...inject(intrinsic?.label, { class: styles.label })}
         >
           {label}
           {required && !disabled && (
-            <span {...inject(subProps?.asterisk, { class: styles.asterisk })}>
+            <span {...inject(intrinsic?.asterisk, { class: styles.asterisk })}>
               *
             </span>
           )}
@@ -54,23 +54,23 @@ export const InputWrapper = component$<InputWrapperProps>(
       {description && (
         <p
           id={inputId && `${inputId}-description`}
-          {...inject(subProps?.description, { class: styles.description })}
+          {...inject(intrinsic?.description, { class: styles.description })}
         >
           {description}
         </p>
       )}
-      <div {...inject(subProps?.inner, { class: styles.inner })}>
+      <div {...inject(intrinsic?.inner, { class: styles.inner })}>
         <Slot />
       </div>
       {error && !disabled && (
         <p
           id={inputId && `${inputId}-error`}
           role="alert"
-          {...inject(subProps?.error, { class: styles.error })}
+          {...inject(intrinsic?.error, { class: styles.error })}
         >
           {error}
         </p>
       )}
     </div>
-  ),
+  )
 );

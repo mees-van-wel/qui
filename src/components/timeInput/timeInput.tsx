@@ -9,13 +9,13 @@ import {
   inject,
 } from "~/internal";
 
-export type TimeInputSubProps = {
+export type TimeInputIntrinsic = {
   input?: InputProps;
   closeIcon?: CloseIconProps;
 };
 
 export type TimeInputProps = InputWrapperProps & {
-  subProps?: TimeInputSubProps;
+  intrinsic?: TimeInputIntrinsic;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -27,7 +27,7 @@ export type TimeInputProps = InputWrapperProps & {
 
 export const TimeInput = component$<TimeInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -82,19 +82,19 @@ export const TimeInput = component$<TimeInputProps>(
           disabled={disabled}
           type={disabled && !value ? "text" : "time"}
           value={value}
-          {...inject(subProps?.input, {
+          {...inject(intrinsic?.input, {
             onFocus$: focusHandler,
             onChange$: changeHandler,
           })}
         />
         {!required && value && !noIcon && (
           <CloseIcon
-            {...inject(subProps?.closeIcon, {
+            {...inject(intrinsic?.closeIcon, {
               onClick$: clearHandler,
             })}
           />
         )}
       </InputWrapper>
     );
-  },
+  }
 );

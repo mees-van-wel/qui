@@ -23,14 +23,14 @@ import { UiContext } from "~/context";
 import commonStyles from "~/common.module.scss";
 import styles from "./fileInput.module.scss";
 
-export type FileInputSubProps = {
+export type FileInputIntrinsic = {
   input?: InputProps;
   button?: QwikIntrinsicElements["button"];
   closeIcon?: CloseIconProps;
 };
 
 export type FileInputProps = InputWrapperProps & {
-  subProps?: FileInputSubProps;
+  intrinsic?: FileInputIntrinsic;
   autoFocus?: boolean;
   name?: string;
   accept?: string;
@@ -72,7 +72,7 @@ const cb = classBuilder(commonStyles);
 
 export const FileInput = component$<FileInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -87,7 +87,7 @@ export const FileInput = component$<FileInputProps>(
     const randomId = useId();
     const { strings } = useContext(UiContext);
     const files = useSignal<NoSerialize<FileList | File> | null>(
-      value ? noSerialize(value) : null,
+      value ? noSerialize(value) : null
     );
 
     useTask$(({ track }) => {
@@ -122,7 +122,7 @@ export const FileInput = component$<FileInputProps>(
           disabled={disabled}
           type="file"
           multiple={multiple}
-          {...inject(subProps?.input, {
+          {...inject(intrinsic?.input, {
             class: styles.input,
             onChange$: changeHandler,
           })}
@@ -130,7 +130,7 @@ export const FileInput = component$<FileInputProps>(
         <button
           type="button"
           disabled={disabled}
-          {...inject(subProps?.button, {
+          {...inject(intrinsic?.button, {
             class: [cb("input", { error: error && !disabled }), styles.button],
             onClick$: $(() => {
               element.value?.click();
@@ -149,7 +149,7 @@ export const FileInput = component$<FileInputProps>(
         </button>
         {!required && files.value && (
           <CloseIcon
-            {...inject(subProps?.closeIcon, {
+            {...inject(intrinsic?.closeIcon, {
               onClick$: $(() => {
                 files.value = null;
                 if (onChange$) onChange$(null);
@@ -159,5 +159,5 @@ export const FileInput = component$<FileInputProps>(
         )}
       </InputWrapper>
     );
-  },
+  }
 );

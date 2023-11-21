@@ -21,7 +21,7 @@ export type ButtonCompound = {
   Group: typeof ButtonGroup;
 };
 
-export type ButtonSubProps = {
+export type ButtonIntrinsic = {
   inner?: QwikIntrinsicElements["div"];
   loaderWrapper?: QwikIntrinsicElements["div"];
   loader?: LoaderProps;
@@ -30,7 +30,7 @@ export type ButtonSubProps = {
 export type ButtonVariants = "filled" | "light" | "outline";
 
 export type ButtonProps = QwikIntrinsicElements["button"] & {
-  subProps?: ButtonSubProps;
+  intrinsic?: ButtonIntrinsic;
   size?: QuiSize;
   color?: QuiColor;
   variant?: ButtonVariants;
@@ -44,7 +44,7 @@ const cb = classBuilder(styles);
 
 export const _Button = component$<ButtonProps>(
   ({
-    subProps,
+    intrinsic,
     size = "md",
     color,
     variant = "filled",
@@ -65,20 +65,20 @@ export const _Button = component$<ButtonProps>(
       })}
     >
       {icon ? icon : <></>}
-      <div {...subProps?.inner}>
+      <div {...intrinsic?.inner}>
         <Slot />
       </div>
       {loading && (
         <div
-          {...inject(subProps?.loaderWrapper, {
+          {...inject(intrinsic?.loaderWrapper, {
             class: styles["loader-wrapper"],
           })}
         >
-          <Loader size={size} color="current" {...subProps?.loader} />
+          <Loader size={size} color="current" {...intrinsic?.loader} />
         </div>
       )}
     </button>
-  ),
+  )
 ) as Component<ButtonProps> & ButtonCompound;
 
 _Button.Group = ButtonGroup;

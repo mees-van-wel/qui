@@ -1,6 +1,6 @@
 import { component$, type QwikIntrinsicElements } from "@builder.io/qwik";
 
-export const IconInfoCircle = component$<QwikIntrinsicElements["svg"]>(
+export const IconInfoCircle = component$<QwikIntrinsicElements["div"]>(
   (props) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,5 +20,5 @@ export const IconInfoCircle = component$<QwikIntrinsicElements["svg"]>(
       <path d="M12 9h.01"></path>
       <path d="M11 12h1v4h1"></path>
     </svg>
-  ),
+  )
 );

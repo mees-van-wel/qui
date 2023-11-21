@@ -7,12 +7,12 @@ import {
   inject,
 } from "~/internal";
 
-export type EmailInputSubProps = {
+export type EmailInputIntrinsic = {
   input?: InputProps;
 };
 
 export type EmailInputProps = InputWrapperProps & {
-  subProps?: EmailInputSubProps;
+  intrinsic?: EmailInputIntrinsic;
   value?: string;
   autoFocus?: boolean;
   autoComplete?: boolean;
@@ -24,7 +24,7 @@ export type EmailInputProps = InputWrapperProps & {
 
 export const EmailInput = component$<EmailInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -52,7 +52,7 @@ export const EmailInput = component$<EmailInputProps>(
           disabled={disabled}
           autoComplete={autoComplete ? "username" : undefined}
           type="email"
-          {...inject(subProps?.input, {
+          {...inject(intrinsic?.input, {
             onInput$: $((_: Event, element: HTMLInputElement) => {
               if (onChange$) onChange$(element.value.toLowerCase());
             }),
@@ -60,5 +60,5 @@ export const EmailInput = component$<EmailInputProps>(
         />
       </InputWrapper>
     );
-  },
+  }
 );

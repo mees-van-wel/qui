@@ -17,7 +17,7 @@ import {
   inject,
 } from "~/internal";
 
-export type SegmentsSubProps = {
+export type SegmentsIntrinsic = {
   overlay?: QwikIntrinsicElements["span"];
   segment?: QwikIntrinsicElements["button"];
 };
@@ -25,7 +25,7 @@ export type SegmentsSubProps = {
 export type SegmentsData = { label: string; value: string; disabled?: boolean };
 
 export type SegmentsProps = QwikIntrinsicElements["div"] & {
-  subProps?: SegmentsSubProps;
+  intrinsic?: SegmentsIntrinsic;
   data: SegmentsData[];
   size?: QuiSize;
   color?: QuiColor;
@@ -39,7 +39,7 @@ const cb = classBuilder(styles);
 
 export const Segments = component$<SegmentsProps>(
   ({
-    subProps,
+    intrinsic,
     data,
     size = "md",
     color,
@@ -63,7 +63,7 @@ export const Segments = component$<SegmentsProps>(
 
       const handleResize = () => {
         const segment = document.querySelector<HTMLElement>(
-          `#qui-segment-${randomId}-${currentValue.value}`,
+          `#qui-segment-${randomId}-${currentValue.value}`
         );
 
         if (!segment) return;
@@ -90,7 +90,7 @@ export const Segments = component$<SegmentsProps>(
         })}
       >
         <span
-          {...inject(subProps?.overlay, {
+          {...inject(intrinsic?.overlay, {
             style: [
               `--qui-segments-overlay-width: ${activeSize.width}px`,
               `--qui-segments-overlay-height: ${activeSize.height}px`,
@@ -106,7 +106,7 @@ export const Segments = component$<SegmentsProps>(
             // TODO use ref instead
             id={`qui-segment-${randomId}-${value}`}
             disabled={disabled || disabledOption}
-            {...inject(subProps?.segment, {
+            {...inject(intrinsic?.segment, {
               class: cb("segment", {
                 previousActive: currentValue.value === data[index - 1]?.value,
                 active: currentValue.value === value,
@@ -122,5 +122,5 @@ export const Segments = component$<SegmentsProps>(
         ))}
       </div>
     );
-  },
+  }
 );

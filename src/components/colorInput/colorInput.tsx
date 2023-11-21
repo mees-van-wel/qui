@@ -20,7 +20,7 @@ import {
 } from "~/internal";
 import styles from "./colorInput.module.scss";
 
-export type ColorInputSubProps = {
+export type ColorInputIntrinsic = {
   picker?: QwikIntrinsicElements["input"];
   input?: InputProps;
   swatch?: ColorSwatchProps;
@@ -28,7 +28,7 @@ export type ColorInputSubProps = {
 };
 
 export type ColorInputProps = InputWrapperProps & {
-  subProps?: ColorInputSubProps;
+  intrinsic?: ColorInputIntrinsic;
   value?: string;
   autoFocus?: boolean;
   name?: string;
@@ -39,7 +39,7 @@ export type ColorInputProps = InputWrapperProps & {
 
 export const ColorInput = component$<ColorInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -86,7 +86,7 @@ export const ColorInput = component$<ColorInputProps>(
           ref={colorInputRef}
           value={internalValue.value}
           type="color"
-          {...inject(subProps?.picker, {
+          {...inject(intrinsic?.picker, {
             class: styles["color-input"],
             onInput$: inputHandler,
             onChange$: changeHandler,
@@ -106,7 +106,7 @@ export const ColorInput = component$<ColorInputProps>(
             internalValue.value = value;
             if (!value) element.value = "#";
           }}
-          {...inject(subProps?.input, { class: styles["text-input"] })}
+          {...inject(intrinsic?.input, { class: styles["text-input"] })}
         />
         {internalValue.value ? (
           <ColorSwatch
@@ -114,7 +114,7 @@ export const ColorInput = component$<ColorInputProps>(
             onClick$={() => {
               colorInputRef.value?.showPicker();
             }}
-            {...inject(subProps?.swatch, {
+            {...inject(intrinsic?.swatch, {
               class: styles["color-picker"],
               color: `#${internalValue.value}`,
             })}
@@ -130,7 +130,7 @@ export const ColorInput = component$<ColorInputProps>(
 
         {!required && internalValue.value && (
           <CloseIcon
-            {...inject(subProps?.closeIcon, {
+            {...inject(intrinsic?.closeIcon, {
               onClick$: $(() => {
                 internalValue.value = "";
               }),
@@ -139,5 +139,5 @@ export const ColorInput = component$<ColorInputProps>(
         )}
       </InputWrapper>
     );
-  },
+  }
 );

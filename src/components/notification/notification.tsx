@@ -18,7 +18,7 @@ import { Loader, LoaderProps } from "../loader";
 //   error: <IconX class="w-4 text-white" />,
 // };
 
-export type NotificationSubProps = {
+export type NotificationIntrinsic = {
   iconWrapper?: QwikIntrinsicElements["div"];
   header?: GroupProps;
   loader?: LoaderProps;
@@ -27,7 +27,7 @@ export type NotificationSubProps = {
 };
 
 export type NotificationProps = QwikIntrinsicElements["div"] & {
-  subProps?: NotificationSubProps;
+  intrinsic?: NotificationIntrinsic;
   title?: string;
   color?: QuiColor;
   icon?: JSX.Element;
@@ -36,7 +36,7 @@ export type NotificationProps = QwikIntrinsicElements["div"] & {
 };
 
 export const Notification = component$<NotificationProps>(
-  ({ subProps, title, color, icon, loading, onClose$, ...props }) => (
+  ({ intrinsic, title, color, icon, loading, onClose$, ...props }) => (
     <div
       {...inject(props, {
         style: getColor(color),
@@ -45,7 +45,7 @@ export const Notification = component$<NotificationProps>(
     >
       <Group
         gap="xs"
-        {...inject(subProps?.header, {
+        {...inject(intrinsic?.header, {
           style: {
             paddingRight: onClose$ ? "1.5rem" : undefined,
           },
@@ -53,23 +53,23 @@ export const Notification = component$<NotificationProps>(
       >
         {(icon || loading) && (
           <div
-            {...inject(subProps?.iconWrapper, {
+            {...inject(intrinsic?.iconWrapper, {
               class: styles["icon-wrapper"],
             })}
           >
-            {loading ? <Loader color="current" {...subProps?.loader} /> : icon}
+            {loading ? <Loader color="current" {...intrinsic?.loader} /> : icon}
           </div>
         )}
         {title ? (
-          <p {...inject(subProps?.title, { class: styles.title })}>{title}</p>
+          <p {...inject(intrinsic?.title, { class: styles.title })}>{title}</p>
         ) : (
           <Slot />
         )}
       </Group>
       {title && <Slot />}
       {onClose$ && (
-        <CloseIcon {...inject(subProps?.closeIcon, { onClick$: onClose$ })} />
+        <CloseIcon {...inject(intrinsic?.closeIcon, { onClick$: onClose$ })} />
       )}
     </div>
-  ),
+  )
 );

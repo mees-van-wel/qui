@@ -9,13 +9,13 @@ import {
   inject,
 } from "~/internal";
 
-export type DateInputSubProps = {
+export type DateInputIntrinsic = {
   input?: InputProps;
   closeIcon?: CloseIconProps;
 };
 
 export type DateInputProps = InputWrapperProps & {
-  subProps?: DateInputSubProps;
+  intrinsic?: DateInputIntrinsic;
   value?: Date | null;
   autoFocus?: boolean;
   name?: string;
@@ -39,12 +39,12 @@ export type DateInputProps = InputWrapperProps & {
 export const dateToDateString = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
     2,
-    "0",
+    "0"
   )}-${String(date.getDate()).padStart(2, "0")}`;
 
 export const DateInput = component$<DateInputProps>(
   ({
-    subProps,
+    intrinsic,
     label,
     description,
     error,
@@ -104,16 +104,16 @@ export const DateInput = component$<DateInputProps>(
               : undefined
           }
           onChange$={changeHandler}
-          {...subProps?.input}
+          {...intrinsic?.input}
         />
         {!required && value && !noIcon && (
           <CloseIcon
-            {...inject(subProps?.closeIcon, {
+            {...inject(intrinsic?.closeIcon, {
               onClick$: clearHandler,
             })}
           />
         )}
       </InputWrapper>
     );
-  },
+  }
 );

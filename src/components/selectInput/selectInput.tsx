@@ -4,31 +4,29 @@ import {
   $,
   useComputed$,
   useId,
-  useVisibleTask$,
-  useContextProvider,
-  Signal,
-  useTask$,
   QwikIntrinsicElements,
-  QwikKeyboardEvent,
+  useOnDocument,
+  useContext,
 } from "@builder.io/qwik";
 import {
   InputProps,
   InputWrapper,
-  CloseIcon,
   Input,
   IconChevronDown,
   IconX,
   InputWrapperProps,
   inject,
   classBuilder,
+  InputBase,
+  QuiColor,
+  getColor,
 } from "~/internal";
-import clsx from "clsx";
-import { Group, type GroupProps } from "../group";
-import { Dropdown, type DropdownProps } from "./dropdown";
-import { SelectInputContext } from "./selectInputContext";
+import { type GroupProps } from "../group";
 import commonStyles from "~/common.module.scss";
-import classes from "./selectInput.module.scss";
-import { Floater } from "../floater";
+import styles from "./selectInput.module.scss";
+import { Floater, FloaterProps } from "../floater";
+import { UiContext } from "~/context";
+import { useUpdateTask } from "~/hooks";
 
 export type SelectValue = string | number;
 
@@ -39,27 +37,26 @@ export interface SelectOption {
   group?: string;
 }
 
-export type SelectInputSubProps = {
+export type SelectInputIntrinsic = {
+  root: InputWrapperProps;
   multipleWrapper?: GroupProps;
+  multipleItemWrapper?: QwikIntrinsicElements["div"];
   multipleItem?: QwikIntrinsicElements["div"];
+  multipleItemDeleteIcon?: QwikIntrinsicElements["div"];
+  option?: QwikIntrinsicElements["button"];
+  optionLabel?: QwikIntrinsicElements["span"];
+  optionDescription?: QwikIntrinsicElements["span"];
   input?: InputProps;
-  icon?: QwikIntrinsicElements["svg"];
-  dropdown?: DropdownProps;
-  // option?: OptionProps;
+  icon?: QwikIntrinsicElements["div"];
+  dropdown?: FloaterProps;
 };
 
-export type SelectInputProps = InputWrapperProps & {
-  subProps?: SelectInputSubProps;
+export type SelectInputProps = InputBase<SelectValue | SelectValue[] | null> & {
+  intrinsic?: SelectInputIntrinsic;
   data: SelectOption[];
+  color?: QuiColor;
   onSearch$?: (search: string) => void;
-  dropdownState?: Signal<boolean>;
-  tabIndex?: number;
-  noFilter?: boolean;
-  onClear$?: () => void;
   multiple?: boolean;
-  required?: boolean;
-  value?: SelectValue | SelectValue[] | null;
-  onChange$?: (value: SelectValue | SelectValue[] | null) => void;
 };
 // & (
 //     | {
@@ -88,319 +85,288 @@ export type SelectInputProps = InputWrapperProps & {
 //       }
 //   );
 
-const cb = classBuilder(classes);
+const cb = classBuilder(styles);
 
-// TODO Dropdown over parent elements (see phone input on login screen)
 export const SelectInput = component$<SelectInputProps>(
   ({
-    subProps,
+    intrinsic,
     data,
+    color,
     onChange$,
     onSearch$,
-    value,
     multiple,
+    value = multiple ? [] : null,
     label,
     description,
     error,
-    dropdownState,
     required,
     disabled,
-    tabIndex,
-    noFilter,
-    onClear$,
-    ...props
   }) => {
-    const relativeRef = useSignal<HTMLInputElement>();
-    const inputRef = useSignal<HTMLInputElement>();
-    const popupRef = useSignal<HTMLDivElement>();
-    const searchValue = useSignal<string | null>(null);
-    const selectedOption = useSignal<SelectValue | SelectValue[] | undefined>(
-      value ?? undefined,
-    );
-    const inputValue = useSignal(value);
-    const localDropdownState = useSignal(false);
-    const open = dropdownState || localDropdownState;
-    const randomId = useId();
+    const { strings } = useContext(UiContext);
+    const rootRef = useSignal<HTMLDivElement>();
+    const inputRef = useSignal<HTMLDivElement>();
+    const open = useSignal(false);
+    const current = useSignal(value);
+    const search = useSignal<string>();
+    const inputId = useId();
 
-    const filteredOptions = useComputed$(() => {
-      if (typeof searchValue.value !== "string") return data;
-
-      const upperSearchValue = searchValue.value.toUpperCase();
-
-      return noFilter
-        ? data
-        : data.filter((option) => {
-            const matchesSearchValue =
-              option.label.toUpperCase().includes(upperSearchValue) ||
-              (option.description &&
-                option.description.toUpperCase().includes(upperSearchValue));
-
-            if (!multiple) return matchesSearchValue;
-
-            const notInValueArray = !value?.some((val) => val === option.value);
-
-            return matchesSearchValue && notInValueArray;
-          });
-    });
-
-    const inputLabel = useComputed$(
-      () =>
-        data.find((option) => option.value === inputValue.value)?.label ||
-        (inputValue.value ? JSON.stringify(inputValue.value) : ""),
+    const currentLabel = useComputed$(() =>
+      multiple
+        ? undefined
+        : data.find((option) => option.value === current.value)?.label
     );
 
-    const changeHandler = $(
-      (value: SelectValue | SelectValue[] | undefined) => {
-        inputValue.value = value;
-        selectedOption.value = value;
-        searchValue.value = null;
+    const options = useComputed$(() =>
+      data.filter(({ value, label, description }) => {
+        const searched = search.value
+          ? label
+              .toLocaleLowerCase()
+              .includes(search.value.toLocaleLowerCase()) ||
+            description
+              ?.toLocaleLowerCase()
+              .includes(search.value.toLocaleLowerCase())
+          : true;
 
-        if (onChange$) {
-          if (multiple) onChange$((value as SelectValue[]) ?? []);
-          else onChange$((value as SelectValue) ?? null);
-        }
-      },
+        // @ts-ignore DUT
+        return multiple ? searched && !current.value.includes(value) : searched;
+      })
     );
 
-    const blurHandler = $(() => {
+    const closeHandler = $(() => {
       open.value = false;
-      if (
-        !required &&
-        searchValue.value === "" &&
-        inputValue.value !== undefined
-      ) {
-        changeHandler(undefined);
-      }
-      searchValue.value = null;
-      inputRef.value?.blur();
+      search.value = undefined;
     });
 
-    const inputHandler = $((event: Event) => {
-      const target = event.target as HTMLInputElement;
-      searchValue.value = target.value;
-      if (onSearch$) onSearch$(target.value);
-    });
+    useUpdateTask(
+      $((track) => {
+        track(() => value);
+      }),
+      $(() => {
+        current.value = value;
+      })
+    );
 
-    const keyDownHandler = $((event: QwikKeyboardEvent<HTMLInputElement>) => {
-      const getNextIndex = (currentIndex: number, step: number) =>
-        (currentIndex + step + filteredOptions.value.length) %
-        filteredOptions.value.length;
+    useUpdateTask(
+      $((track) => {
+        track(() => current.value);
+      }),
+      $(() => {
+        if (onChange$) onChange$(current.value);
+      })
+    );
 
-      const currentIndex = selectedOption.value
-        ? filteredOptions.value.findIndex(
-            ({ value }) => value === selectedOption.value,
-          )
-        : event.key === "ArrowUp"
-        ? 0
-        : -1;
-
-      switch (event.key) {
-        case "Enter":
-          if (filteredOptions.value.length) {
-            const optionValue =
-              filteredOptions.value.find(
-                ({ value }) => selectedOption.value === value,
-              )?.value ?? filteredOptions.value[0]?.value;
-
-            if (multiple)
-              changeHandler(
-                optionValue
-                  ? value
-                    ? [...value, optionValue]
-                    : [optionValue]
-                  : undefined,
-              );
-            else changeHandler(optionValue);
-
-            if (!multiple) blurHandler();
-          }
-          break;
-        case "ArrowDown":
-          selectedOption.value =
-            filteredOptions.value[getNextIndex(currentIndex, 1)]?.value;
-          break;
-        case "ArrowUp":
-          selectedOption.value =
-            filteredOptions.value[getNextIndex(currentIndex, -1)]?.value;
-          break;
-        case "Backspace":
-          if (multiple && value && !searchValue.value) {
-            const clone = [...value];
-            clone.pop();
-            changeHandler(clone);
-          }
-          break;
+    const keyDownHandler = $((event: KeyboardEvent) => {
+      switch (event.code) {
         case "Escape":
-          blurHandler();
+          inputRef.value?.blur();
+          closeHandler();
+          break;
+
+        case "Enter":
+          if (!open.value) return;
+          current.value = multiple // @ts-ignore DUT
+            ? [...current.value, options.value[0].value]
+            : options.value[0].value;
+          if (!multiple) closeHandler();
+          else search.value = undefined;
+          break;
+
+        case "Backspace":
+          if (!multiple || !current.value) return;
+          // @ts-ignore DUT
+          current.value = current.value.slice(0, -1);
+          break;
+
+        default:
           break;
       }
     });
 
-    useContextProvider(SelectInputContext, {
-      filteredOptions,
-      searchValue,
-      selectedOption,
-      inputValue,
-      select: $((selectValue: SelectValue) => {
-        changeHandler(
-          multiple
-            ? value
-              ? [...value, selectValue]
-              : [selectValue]
-            : selectValue,
-        );
-        if (!multiple) blurHandler();
-      }),
+    const outClickHandler = $((event: Event) => {
+      if (!rootRef.value?.contains(event.target as Node)) closeHandler();
     });
 
-    useTask$(({ track }) => {
-      track(() => value);
-
-      inputValue.value = value;
-    });
-
-    useVisibleTask$(({ cleanup }) => {
-      const clickHandler = (event: MouseEvent) => {
-        if (
-          !disabled &&
-          inputRef.value &&
-          popupRef.value &&
-          event.target &&
-          !popupRef.value.contains(event.target as Node) &&
-          !inputRef.value.contains(event.target as Node)
-        )
-          blurHandler();
-      };
-
-      document.addEventListener("mousedown", clickHandler);
-
-      cleanup(() => document.removeEventListener("mousedown", clickHandler));
-    });
-
-    const inputProps: InputProps = {
-      ref: inputRef,
-      type: "text",
-      autoComplete: "off",
-      spellcheck: false,
-      "aria-autocomplete": "both",
-      "aria-haspopup": false,
-      id: randomId,
-      value:
-        searchValue.value === null
-          ? multiple
-            ? undefined
-            : inputLabel.value
-          : searchValue.value,
-      onInput$: inputHandler,
-      onKeyDown$: keyDownHandler,
-      onFocus$: $(() => {
-        open.value = true;
-      }),
-      invalid: !!error,
-      disabled,
-      required,
-      tabIndex,
-    };
+    useOnDocument("click", outClickHandler);
 
     return (
       <InputWrapper
-        inputId={randomId}
+        ref={rootRef}
+        inputId={inputId}
         label={label}
         description={description}
         error={error}
         required={required}
         disabled={disabled}
-        {...props}
+        {...inject(intrinsic?.root, {
+          style: getColor(color),
+          class: cb("root", {
+            open: open.value,
+          }),
+        })}
       >
         {multiple ? (
-          <Group
-            ref={relativeRef}
-            gap="sm"
-            onClick$={() => {
-              inputRef.value?.focus();
-            }}
-            {...inject(subProps?.multipleWrapper, {
-              class: [
-                commonStyles.input,
-                {
-                  [commonStyles["input--error"]]: error && !disabled,
-                },
-                cb("multiple-wrapper", {
-                  open: open.value,
-                  disabled,
-                }),
-              ],
+          <div
+            {...inject(intrinsic?.multipleItemWrapper, {
+              class: [commonStyles.input, styles["multiple-wrapper"]],
+              onClick$: $(() => {
+                inputRef.value?.focus();
+              }),
             })}
           >
-            {value?.map((singleValue) => (
-              <div
-                key={singleValue}
-                {...inject(subProps?.multipleItem, {
-                  class: cb("multiple-item", { disabled }),
-                })}
-              >
-                <p>
-                  {data.find((option) => option.value === singleValue)?.label}
-                </p>
-                {!disabled && (
-                  <IconX
-                    class={classes["multiple-item-icon"]}
-                    onClick$={() => {
-                      changeHandler(
-                        value.filter((current) => current !== singleValue),
-                      );
-                      if (onClear$) onClear$();
-                    }}
-                  />
-                )}
-              </div>
-            ))}
+            {Array.isArray(current.value) &&
+              current.value.map((value) => {
+                const option = data.find((option) => option.value === value);
+                if (!option) return;
+
+                return (
+                  <div
+                    key={value}
+                    {...inject(intrinsic?.multipleItem, {
+                      class: styles["multiple-item"],
+                      onClick$: $(() => {
+                        // @ts-ignore DUT
+                        current.value = current.value?.filter(
+                          // @ts-ignore DUT
+                          (currentValue) => currentValue !== value
+                        );
+
+                        open.value = true;
+                      }),
+                    })}
+                  >
+                    {option.label}
+                    <IconX
+                      {...inject(intrinsic?.multipleItemDeleteIcon, {
+                        class: styles["multiple-item-delete-icon"],
+                      })}
+                    />
+                  </div>
+                );
+              })}
             <input
-              class={clsx(classes["multiple-input"], classNames?.input)}
-              {...inputProps}
+              data-naked
+              id={inputId}
+              ref={inputRef}
+              type="text"
+              autoComplete="off"
+              spellcheck={false}
+              aria-autocomplete="both"
+              aria-haspopup={false}
+              value={
+                search.value === undefined ? currentLabel.value : search.value
+              }
+              onFocus$={() => {
+                open.value = true;
+              }}
+              onInput$={(_, element) => {
+                search.value = element.value;
+                if (onSearch$) onSearch$(element.value);
+              }}
+              // @ts-ignore Wrong event type
+              onKeyDown$={keyDownHandler}
+              // @ts-ignore Wrong event type
+              onBlur$={outClickHandler}
+              class={styles["multiple-input"]}
             />
-          </Group>
+          </div>
         ) : (
           <Input
-            class={clsx(classes.input, classNames?.input)}
-            style={styles?.input}
-            {...inputProps}
+            ref={inputRef}
+            id={inputId}
+            type="text"
+            autoComplete="off"
+            spellcheck={false}
+            aria-autocomplete="both"
+            aria-haspopup={false}
+            value={
+              search.value === undefined ? currentLabel.value : search.value
+            }
+            onFocus$={() => {
+              open.value = true;
+            }}
+            onInput$={(_, element) => {
+              search.value = element.value;
+              if (!element.value) current.value = null;
+              if (onSearch$) onSearch$(element.value);
+            }}
+            // @ts-ignore Wrong event typing
+            onKeyDown$={keyDownHandler}
+            // @ts-ignore Wrong event typing
+            onBlur$={outClickHandler}
           />
         )}
-        {!disabled &&
-          (!required &&
-          (Array.isArray(inputValue.value)
-            ? inputValue.value.length
-            : inputValue.value) ? (
-            <CloseIcon
-              style={styles?.icon}
-              class={classNames?.icon}
-              onClick$={() => {
-                changeHandler(undefined);
-                if (onClear$) onClear$();
-              }}
-            />
-          ) : (
-            <IconChevronDown
-              style={styles?.icon}
-              class={clsx(classes["chevron-icon"], classNames?.icon, {
-                [classes["chevron-icon--open"]]: open.value,
-              })}
-              onClick$={() => {
+        {(
+          Array.isArray(current.value) ? current.value.length : current.value
+        ) ? (
+          <IconX
+            {...inject(intrinsic?.icon, {
+              class: styles["close-icon"],
+              onClick$: $(() => {
+                current.value = multiple ? [] : null;
+                closeHandler();
+              }),
+            })}
+          />
+        ) : (
+          <IconChevronDown
+            {...inject(intrinsic?.icon, {
+              class: styles["chevron-icon"],
+              onClick$: $(() => {
                 open.value = !open.value;
-                inputRef.value?.focus();
-              }}
-            />
-          ))}
-        {open.value && (filteredOptions.value.length || searchValue.value) && (
+              }),
+            })}
+          />
+        )}
+        {open.value && (
           <Floater
-            relativeRef={multiple ? relativeRef : inputRef}
             placement="bottom-start"
+            relativeRef={rootRef}
+            {...inject(intrinsic?.dropdown, {
+              class: styles.dropdown,
+            })}
           >
-            <Dropdown ref={popupRef} />
+            {options.value.length ? (
+              options.value.map(({ value, label, description }) => (
+                <button
+                  data-naked
+                  key={value}
+                  type="button"
+                  {...inject(intrinsic?.option, {
+                    class: cb("option", {
+                      current: Array.isArray(current.value)
+                        ? current.value.includes(value)
+                        : current.value === value,
+                    }),
+                    onClick$: $(() => {
+                      current.value = !multiple
+                        ? value
+                        : Array.isArray(current.value)
+                        ? [...current.value, value]
+                        : [value];
+                      if (!Array.isArray(current.value)) closeHandler();
+                    }),
+                  })}
+                >
+                  <span {...intrinsic?.optionLabel}>{label}</span>
+                  {description && (
+                    <span
+                      {...inject(intrinsic?.optionDescription, {
+                        class: styles["option-description"],
+                      })}
+                    >
+                      {description}
+                    </span>
+                  )}
+                </button>
+              ))
+            ) : (
+              <p class={styles["not-found-text"]}>
+                {strings?.nothingFound || "Nothing found..."}
+              </p>
+            )}
           </Floater>
         )}
       </InputWrapper>
     );
-  },
+  }
 );

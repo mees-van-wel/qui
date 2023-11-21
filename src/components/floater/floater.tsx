@@ -49,7 +49,7 @@ export const Floater = component$<FloaterProps>(
         if (!relativeRef?.value || !floaterRef.value) return;
         computePosition(relativeRef.value, floaterRef.value, {
           placement,
-          middleware: [flip(), shift(), offset(6)],
+          middleware: [flip(), shift(), offset(8)],
         }).then(({ x, y }) => {
           floaterPosition.left = x;
           floaterPosition.top = y;
@@ -61,7 +61,7 @@ export const Floater = component$<FloaterProps>(
       const clean = autoUpdate(
         relativeRef.value,
         floaterRef.value,
-        updatePosition,
+        updatePosition
       );
 
       cleanup(() => {
@@ -93,5 +93,5 @@ export const Floater = component$<FloaterProps>(
         <Slot />
       </div>
     );
-  },
+  }
 );

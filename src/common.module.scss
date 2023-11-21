@@ -50,3 +50,17 @@
     }
   }
 }
+
+[data-naked] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  appearance: none;
+  outline: none;
+}

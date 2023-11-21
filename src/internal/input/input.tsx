@@ -37,5 +37,5 @@ export const Input = component$<InputProps>(
         })}
       />
     );
-  },
+  }
 );

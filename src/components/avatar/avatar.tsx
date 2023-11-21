@@ -9,13 +9,13 @@ import {
 } from "~/internal";
 import styles from "./avatar.module.scss";
 
-export type AvatarSubProps = {
-  icon?: QwikIntrinsicElements["svg"];
+export type AvatarIntrinsic = {
+  icon?: QwikIntrinsicElements["div"];
   image?: QwikIntrinsicElements["img"];
 };
 
 export type AvatarProps = QwikIntrinsicElements["div"] & {
-  subProps?: AvatarSubProps;
+  intrinsic?: AvatarIntrinsic;
   size?: QuiSize;
   color?: QuiColor;
   content?: string;
@@ -23,7 +23,7 @@ export type AvatarProps = QwikIntrinsicElements["div"] & {
 
 // TODO Add variants
 export const Avatar = component$<AvatarProps>(
-  ({ subProps, size = "md", color, content, ...props }) => {
+  ({ intrinsic, size = "md", color, content, ...props }) => {
     return (
       <div
         {...inject(props, {
@@ -32,7 +32,7 @@ export const Avatar = component$<AvatarProps>(
         })}
       >
         {!content ? (
-          <IconUserCircle {...subProps?.icon} />
+          <IconUserCircle {...intrinsic?.icon} />
         ) : content.startsWith("http") ? (
           // TODO Fix width-height
           // eslint-disable-next-line qwik/jsx-img
@@ -40,12 +40,12 @@ export const Avatar = component$<AvatarProps>(
             decoding="async"
             loading="lazy"
             src={content}
-            {...inject(subProps?.image, { class: styles.image })}
+            {...inject(intrinsic?.image, { class: styles.image })}
           />
         ) : (
           content
         )}
       </div>
     );
-  },
+  }
 );

@@ -1,6 +1,6 @@
 import { component$, type QwikIntrinsicElements } from "@builder.io/qwik";
 
-export const IconH2 = component$<QwikIntrinsicElements["svg"]>((props) => (
+export const IconH2 = component$<QwikIntrinsicElements["div"]>((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="icon icon-tabler icon-tabler-h-2"

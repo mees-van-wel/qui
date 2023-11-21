@@ -14,12 +14,12 @@ import { Checkbox } from "./checkbox";
 import styles from "./choiceInput.module.scss";
 import { Radio } from "./radio";
 
-export type ChoiceInputSubProps = {
+export type ChoiceInputIntrinsic = {
   wrapper?: QwikIntrinsicElements["div"];
 };
 
 export type ChoiceInputProps = InputWrapperProps & {
-  subProps?: ChoiceInputSubProps;
+  intrinsic?: ChoiceInputIntrinsic;
   data: ChoiceOption[];
   value?: (ChoiceValue | null) | ChoiceValue[];
   onChange$?: (value: ChoiceValue | ChoiceValue[]) => void;
@@ -43,7 +43,7 @@ export type ChoiceInputProps = InputWrapperProps & {
 // TODO Generic ChoiceValue typings
 export const ChoiceInput = component$<ChoiceInputProps>(
   ({
-    subProps,
+    intrinsic,
     horizontal,
     multiple,
     data: options,
@@ -77,7 +77,7 @@ export const ChoiceInput = component$<ChoiceInputProps>(
       >
         <Wrapper
           id={randomId}
-          {...inject(subProps?.wrapper, {
+          {...inject(intrinsic?.wrapper, {
             class: styles.wrapper,
           })}
         >
@@ -94,5 +94,5 @@ export const ChoiceInput = component$<ChoiceInputProps>(
         </Wrapper>
       </InputWrapper>
     );
-  },
+  }
 );
