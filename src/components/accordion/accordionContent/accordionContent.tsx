@@ -8,9 +8,8 @@ import { classBuilder, inject } from "~/internal";
 
 export type AccordionContentProps = QwikIntrinsicElements["div"];
 
-const cb = classBuilder(styles);
-
 export const AccordionContent = component$<AccordionContentProps>((props) => {
+  const cb = classBuilder(styles);
   const accordionContext = useAccordionContext();
   const { id } = useAccordionItemContext();
 

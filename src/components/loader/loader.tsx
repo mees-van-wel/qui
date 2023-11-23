@@ -20,10 +20,9 @@ export type LoaderProps = QwikIntrinsicElements["div"] & {
   variant?: LoaderVariants;
 };
 
-const cb = classBuilder(styles);
-
 export const Loader = component$<LoaderProps>(
   ({ size = "md", variant = "ring", color, ...props }) => {
+    const cb = classBuilder(styles);
     const Component = variant === "ring" ? IconLoadingRing : IconLoadingDots;
 
     return (

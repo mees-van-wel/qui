@@ -24,8 +24,6 @@ export type BadgeProps = QwikIntrinsicElements["div"] & {
   fullWidth?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Badge = component$<BadgeProps>(
   ({
     intrinsic,
@@ -34,19 +32,23 @@ export const Badge = component$<BadgeProps>(
     color,
     fullWidth,
     ...props
-  }) => (
-    <div
-      {...inject(props, {
-        style: [`--qui-badge-size: ${getSize(size)}`, getColor(color)],
-        class: cb("root", { variant, fullWidth }),
-      })}
-    >
-      {variant === "dot" && (
-        <div {...inject(intrinsic?.dot, { class: styles.dot })} />
-      )}
-      <div {...inject(intrinsic?.inner, { class: styles.inner })}>
-        <Slot />
+  }) => {
+    const cb = classBuilder(styles);
+
+    return (
+      <div
+        {...inject(props, {
+          style: [`--qui-badge-size: ${getSize(size)}`, getColor(color)],
+          class: cb("root", { variant, fullWidth }),
+        })}
+      >
+        {variant === "dot" && (
+          <div {...inject(intrinsic?.dot, { class: styles.dot })} />
+        )}
+        <div {...inject(intrinsic?.inner, { class: styles.inner })}>
+          <Slot />
+        </div>
       </div>
-    </div>
-  )
+    );
+  }
 );

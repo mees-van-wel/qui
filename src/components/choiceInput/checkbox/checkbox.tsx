@@ -12,10 +12,9 @@ export type CheckboxProps = {
   invalid?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Checkbox = component$<CheckboxProps>(
   ({ option, value, onChange$, invalid }) => {
+    const cb = classBuilder(styles);
     const { disabled, id } = useContext(ChoiceContext);
     const randomId = useId();
 
@@ -27,7 +26,7 @@ export const Checkbox = component$<CheckboxProps>(
               onChange$(
                 el.checked
                   ? [...(value || []), option.value].sort()
-                  : (value || []).filter((val) => val !== option.value).sort(),
+                  : (value || []).filter((val) => val !== option.value).sort()
               );
           }}
           id={randomId}
@@ -48,5 +47,5 @@ export const Checkbox = component$<CheckboxProps>(
         </div>
       </Group>
     );
-  },
+  }
 );

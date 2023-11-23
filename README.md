@@ -62,15 +62,15 @@ Please note that qUI is currently in beta. We are actively working on improving 
 To start using qUI in your project, you can install it using your preferred package manager:
 
 ```sh
-npm install @hexa-it/bem-modules
+npm install @hexa-it/qui
 ```
 
 ```sh
-yarn add @hexa-it/bem-modules
+yarn add @hexa-it/qui
 ```
 
 ```sh
-pnpm add @hexa-it/bem-modules
+pnpm add @hexa-it/qui
 ```
 
 Once installed, you can directly import and use the components in your Qwik projects.
@@ -92,4 +92,3 @@ qUI is licensed under the MIT License, a widely used permissive open source lice
 ---
 
 Stay tuned for updates, and thank you for exploring qUI - where performance meets elegance in Qwik UI development!
-

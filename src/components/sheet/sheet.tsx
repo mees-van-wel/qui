@@ -27,10 +27,9 @@ export type SheetProps = StackProps & {
   glass?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Sheet = component$<SheetProps>(
   ({ intrinsic, title, showDefault, glass, ...props }) => {
+    const cb = classBuilder(styles);
     const { current: showSignal, isInitialized } = useLocalStorage<
       boolean | undefined
     >({

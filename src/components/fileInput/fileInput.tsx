@@ -68,8 +68,6 @@ export type FileInputProps = InputWrapperProps & {
 //       }
 //   );
 
-const cb = classBuilder(commonStyles);
-
 export const FileInput = component$<FileInputProps>(
   ({
     intrinsic,
@@ -83,6 +81,7 @@ export const FileInput = component$<FileInputProps>(
     onChange$,
     ...props
   }) => {
+    const cb = classBuilder(commonStyles);
     const element = useSignal<HTMLInputElement>();
     const randomId = useId();
     const { strings } = useContext(UiContext);

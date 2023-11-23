@@ -85,8 +85,6 @@ export type SelectInputProps = InputBase<SelectValue | SelectValue[] | null> & {
 //       }
 //   );
 
-const cb = classBuilder(styles);
-
 export const SelectInput = component$<SelectInputProps>(
   ({
     intrinsic,
@@ -102,6 +100,7 @@ export const SelectInput = component$<SelectInputProps>(
     required,
     disabled,
   }) => {
+    const cb = classBuilder(styles);
     const { strings } = useContext(UiContext);
     const rootRef = useSignal<HTMLDivElement>();
     const inputRef = useSignal<HTMLDivElement>();

@@ -8,10 +8,9 @@ export type TabsTabProps = QwikIntrinsicElements["button"] & {
   disabled?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const TabsTab = component$<TabsTabProps>(
   ({ value, disabled, ...props }) => {
+    const cb = classBuilder(styles);
     const { currentTab, orientation } = useTabsContext();
 
     return (
@@ -31,5 +30,5 @@ export const TabsTab = component$<TabsTabProps>(
         <Slot />
       </button>
     );
-  },
+  }
 );

@@ -16,17 +16,19 @@ export type PaperProps = QwikIntrinsicElements["div"] & {
   fullWidth?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Paper = component$<PaperProps>(
-  ({ variant = "foreground", glass, noPadding, fullWidth, ...props }) => (
-    <div
-      {...inject(props, {
-        style: `--qui-paper-background-color: var(--qui-color-${variant})`,
-        class: cb("root", { glass, noPadding, fullWidth }),
-      })}
-    >
-      <Slot />
-    </div>
-  ),
+  ({ variant = "foreground", glass, noPadding, fullWidth, ...props }) => {
+    const cb = classBuilder(styles);
+
+    return (
+      <div
+        {...inject(props, {
+          style: `--qui-paper-background-color: var(--qui-color-${variant})`,
+          class: cb("root", { glass, noPadding, fullWidth }),
+        })}
+      >
+        <Slot />
+      </div>
+    );
+  }
 );

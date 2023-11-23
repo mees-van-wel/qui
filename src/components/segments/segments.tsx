@@ -35,8 +35,6 @@ export type SegmentsProps = QwikIntrinsicElements["div"] & {
   disabled?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Segments = component$<SegmentsProps>(
   ({
     intrinsic,
@@ -49,6 +47,7 @@ export const Segments = component$<SegmentsProps>(
     disabled,
     ...props
   }) => {
+    const cb = classBuilder(styles);
     const currentValue = useSignal(value || data[0]?.value);
     const randomId = useId();
     const activeSize = useStore({

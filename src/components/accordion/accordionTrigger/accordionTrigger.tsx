@@ -14,9 +14,8 @@ import { IconChevronDown, classBuilder, inject } from "~/internal";
 
 export type AccordionTriggerProps = QwikIntrinsicElements["button"];
 
-const cb = classBuilder(styles);
-
 export const AccordionTrigger = component$<AccordionTriggerProps>((props) => {
+  const cb = classBuilder(styles);
   const accordionContext = useAccordionContext();
   const { id } = useAccordionItemContext();
 

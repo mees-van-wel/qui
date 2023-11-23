@@ -5,9 +5,8 @@ import { classBuilder, inject } from "~/internal";
 
 export type TabsListProps = QwikIntrinsicElements["div"];
 
-const cb = classBuilder(styles);
-
 export const TabsList = component$<TabsListProps>((props) => {
+  const cb = classBuilder(styles);
   const { orientation } = useTabsContext();
 
   return (

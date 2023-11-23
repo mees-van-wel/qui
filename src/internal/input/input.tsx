@@ -12,10 +12,9 @@ export type InputProps = QwikIntrinsicElements["input"] & {
   invalid?: boolean;
 };
 
-const cb = classBuilder(commonStyles);
-
 export const Input = component$<InputProps>(
   ({ disabled, invalid, autoComplete = "off", ...props }) => {
+    const cb = classBuilder(commonStyles);
     const { locale } = useContext(UiContext);
 
     return (

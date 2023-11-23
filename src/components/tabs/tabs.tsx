@@ -26,10 +26,9 @@ export type TabsProps = QwikIntrinsicElements["div"] & {
   orientation?: "horizontal" | "vertical";
 };
 
-const cb = classBuilder(styles);
-
 const _Tabs = component$<TabsProps>(
   ({ defaultValue, onChange$, orientation = "horizontal", ...props }) => {
+    const cb = classBuilder(styles);
     const currentTab = useSignal(defaultValue);
 
     useContextProvider(TabsContext, {
@@ -52,7 +51,7 @@ const _Tabs = component$<TabsProps>(
         <Slot />
       </div>
     );
-  },
+  }
 ) as Component<TabsProps> & TabsCompound;
 
 _Tabs.List = TabsList;

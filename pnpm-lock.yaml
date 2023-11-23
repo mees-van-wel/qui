@@ -66,7 +66,7 @@ devDependencies:
     version: 8.51.0
   eslint-plugin-qwik:
     specifier: latest
-    version: 1.2.18(eslint@8.51.0)
+    version: 1.2.19(eslint@8.51.0)
   np:
     specifier: ^8.0.4
     version: 8.0.4(typescript@5.2.2)
@@ -85,6 +85,9 @@ devDependencies:
   vite:
     specifier: ^4.4.11
     version: 4.4.11(@types/node@20.8.4)(sass@1.69.5)
+  vite-plugin-lib-inject-css:
+    specifier: ^1.3.0
+    version: 1.3.0(vite@4.4.11)
   vite-tsconfig-paths:
     specifier: ^4.2.1
     version: 4.2.1(typescript@5.2.2)(vite@4.4.11)
@@ -412,6 +415,10 @@ packages:
 
   /@humanwhocodes/object-schema@2.0.1:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
+    dev: true
+
+  /@jridgewell/sourcemap-codec@1.4.15:
+    resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
 
   /@ljharb/through@2.3.11:
@@ -1833,8 +1840,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /eslint-plugin-qwik@1.2.18(eslint@8.51.0):
-    resolution: {integrity: sha512-B4c8bo0x6QyhCgGLkSn3/fqLreCnHeLv6UsVlZfW41VpWc4nPiYQqURp+ChY3TiPy2SXJEKtn4F4bBrn3sn4Fw==}
+  /eslint-plugin-qwik@1.2.19(eslint@8.51.0):
+    resolution: {integrity: sha512-/lfTq7e0MzTimUkS/x7HvvqzM+RhpHup8uuMcEv3d38sskkWEdD+KwMqsdUZShDLCuPGch7fj+ploud/179ZzA==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
     peerDependencies:
       eslint: ^8.45.0
@@ -3084,6 +3091,13 @@ packages:
   /lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
+    dev: true
+
+  /magic-string@0.30.5:
+    resolution: {integrity: sha512-7xlpfBaQaP/T6Vh8MO/EqXSW5En6INHEvEXQiuff7Gku0PWjU3uf6w/j9o7O+SpB5fOAkrI5HeoNgwjEO0pFsA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
   /make-error@1.3.6:
@@ -4593,6 +4607,16 @@ packages:
     resolution: {integrity: sha512-M6w37eVCMMouJ9V/sdPGnC5H4uDr73/+xdq0FBLO3TFFX1+7wiUY6Es328NN+y43tmY+doUdN9g9J21vqB7iLw==}
     dependencies:
       builtins: 1.0.3
+    dev: true
+
+  /vite-plugin-lib-inject-css@1.3.0(vite@4.4.11):
+    resolution: {integrity: sha512-Rldq36U9TDlpDom3yoLybfJtzn897+oMKdX0+fxbVYnYjRGnTtaFfnMmfOckH8GQ3cvGAKv9Ai1PWyE0amIbjg==}
+    peerDependencies:
+      vite: '*'
+    dependencies:
+      magic-string: 0.30.5
+      picocolors: 1.0.0
+      vite: 4.4.11(@types/node@20.8.4)(sass@1.69.5)
     dev: true
 
   /vite-tsconfig-paths@4.2.1(typescript@5.2.2)(vite@4.4.11):

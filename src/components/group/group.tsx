@@ -15,8 +15,6 @@ export type GroupProps = QwikIntrinsicElements["div"] & {
   grow?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Group = component$<GroupProps>(
   ({
     align = "center",
@@ -25,19 +23,23 @@ export const Group = component$<GroupProps>(
     gap = "md",
     grow,
     ...props
-  }) => (
-    <div
-      {...inject(props, {
-        style: [
-          `--qui-group-align: ${align}`,
-          `--qui-group-justify: ${justify}`,
-          `--qui-group-wrap: ${wrap}`,
-          `--qui-group-gap: ${getSize(gap)}`,
-        ],
-        class: cb("root", { grow }),
-      })}
-    >
-      <Slot />
-    </div>
-  ),
+  }) => {
+    const cb = classBuilder(styles);
+
+    return (
+      <div
+        {...inject(props, {
+          style: [
+            `--qui-group-align: ${align}`,
+            `--qui-group-justify: ${justify}`,
+            `--qui-group-wrap: ${wrap}`,
+            `--qui-group-gap: ${getSize(gap)}`,
+          ],
+          class: cb("root", { grow }),
+        })}
+      >
+        <Slot />
+      </div>
+    );
+  }
 );

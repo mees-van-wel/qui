@@ -7,10 +7,9 @@ export type TabsContentProps = QwikIntrinsicElements["div"] & {
   value: string;
 };
 
-const cb = classBuilder(styles);
-
 export const TabsContent = component$<TabsContentProps>(
   ({ value, ...props }) => {
+    const cb = classBuilder(styles);
     const { currentTab } = useTabsContext();
 
     return (
@@ -22,5 +21,5 @@ export const TabsContent = component$<TabsContentProps>(
         <Slot />
       </div>
     );
-  },
+  }
 );

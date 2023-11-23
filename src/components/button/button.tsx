@@ -40,8 +40,6 @@ export type ButtonProps = QwikIntrinsicElements["button"] & {
   fullWidth?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const _Button = component$<ButtonProps>(
   ({
     intrinsic,
@@ -55,30 +53,34 @@ export const _Button = component$<ButtonProps>(
     fullWidth,
     type = "button",
     ...props
-  }) => (
-    <button
-      disabled={disabled || loading}
-      type={type}
-      {...inject(props, {
-        style: [`--qui-button-size: ${getSize(size)}`, getColor(color)],
-        class: cb("root", { variant, disabled, loading, compact, fullWidth }),
-      })}
-    >
-      {icon ? icon : <></>}
-      <div {...intrinsic?.inner}>
-        <Slot />
-      </div>
-      {loading && (
-        <div
-          {...inject(intrinsic?.loaderWrapper, {
-            class: styles["loader-wrapper"],
-          })}
-        >
-          <Loader size={size} color="current" {...intrinsic?.loader} />
+  }) => {
+    const cb = classBuilder(styles);
+
+    return (
+      <button
+        disabled={disabled || loading}
+        type={type}
+        {...inject(props, {
+          style: [`--qui-button-size: ${getSize(size)}`, getColor(color)],
+          class: cb("root", { variant, disabled, loading, compact, fullWidth }),
+        })}
+      >
+        {icon ? icon : <></>}
+        <div {...intrinsic?.inner}>
+          <Slot />
         </div>
-      )}
-    </button>
-  )
+        {loading && (
+          <div
+            {...inject(intrinsic?.loaderWrapper, {
+              class: styles["loader-wrapper"],
+            })}
+          >
+            <Loader size={size} color="current" {...intrinsic?.loader} />
+          </div>
+        )}
+      </button>
+    );
+  }
 ) as Component<ButtonProps> & ButtonCompound;
 
 _Button.Group = ButtonGroup;

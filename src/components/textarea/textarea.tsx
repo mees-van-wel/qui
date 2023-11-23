@@ -26,8 +26,6 @@ export type TextareaProps = InputWrapperProps & {
   ref?: Signal<HTMLInputElement | undefined>;
 };
 
-const cb = classBuilder(commonStyles);
-
 export const Textarea = component$<TextareaProps>(
   ({
     intrinsic,
@@ -40,6 +38,7 @@ export const Textarea = component$<TextareaProps>(
     onChange$,
     ...props
   }) => {
+    const cb = classBuilder(commonStyles);
     const randomId = useId();
 
     return (

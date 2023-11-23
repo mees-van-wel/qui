@@ -12,10 +12,9 @@ export type RadioProps = {
   invalid?: boolean;
 };
 
-const cb = classBuilder(styles);
-
 export const Radio = component$<RadioProps>(
   ({ option, value, onChange$, invalid }) => {
+    const cb = classBuilder(styles);
     const { disabled, id } = useContext(ChoiceContext);
     const randomId = useId();
 
@@ -43,5 +42,5 @@ export const Radio = component$<RadioProps>(
         </div>
       </Group>
     );
-  },
+  }
 );
