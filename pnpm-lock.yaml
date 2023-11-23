@@ -35,15 +35,15 @@ dependencies:
   deepmerge:
     specifier: ^4.3.1
     version: 4.3.1
+  inline-style-parser:
+    specifier: ^0.2.2
+    version: 0.2.2
   modern-normalize:
     specifier: ^2.0.0
     version: 2.0.0
   open-color:
     specifier: ^1.9.1
     version: 1.9.1
-  style-to-object:
-    specifier: ^1.0.4
-    version: 1.0.4
 
 devDependencies:
   '@builder.io/qwik':
@@ -4313,12 +4313,6 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
     dev: true
-
-  /style-to-object@1.0.4:
-    resolution: {integrity: sha512-KyNO6mfijxSnypdvEjeXlhvbGPSh0l1zBJp80n+ncBQvrEbSwBHwZCpo0xz6Q4AKSPfXowWwypCBAUAdfz3rFQ==}
-    dependencies:
-      inline-style-parser: 0.2.2
-    dev: false
 
   /supports-color@2.0.0:
     resolution: {integrity: sha512-KKNVtd6pCYgPIKU4cp2733HWYCpplQhddZLBUryaAHou723x+FRzQ5Df824Fj+IyyuiQTRoub4SnIFfIcrp70g==}

@@ -5,9 +5,9 @@ import {
   type Signal,
 } from "@builder.io/qwik";
 import clsx from "clsx";
-import parse from "style-to-object";
 import type { Falsy } from "./types";
 import merge from "deepmerge";
+import { styleToObject } from "./styleToObject";
 
 type Style = CSSProperties | string | Falsy;
 type Class = clsx.ClassValue | Falsy;
@@ -37,7 +37,7 @@ export const inject = <
       (acc, style) => ({
         // @ts-ignore reduce type bug
         ...acc,
-        ...(typeof style === "string" ? parse(style) : style),
+        ...(typeof style === "string" ? styleToObject(style) : style),
       }),
       {}
     );

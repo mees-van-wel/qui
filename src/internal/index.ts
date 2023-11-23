@@ -8,4 +8,5 @@ export * from "./getColor";
 export * from "./getSize";
 export * from "./getZIndex";
 export * from "./inject";
+export * from './styleToObject';
 export * from "./types";
