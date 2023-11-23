@@ -43,7 +43,7 @@
     "@typescript-eslint/parser": "^6.7.5",
     "eslint": "^8.51.0",
     "eslint-plugin-qwik": "latest",
-    "np": "^8.0.4",
+    "np --no-cleanup": "^8.0.4",
     "prettier": "^3.0.3",
     "sass": "^1.69.5",
     "typescript": "^5.2.2",
@@ -63,7 +63,6 @@
     "@tiptap/starter-kit": "^2.1.12",
     "clsx": "^2.0.0",
     "deepmerge": "^4.3.1",
-    "inline-style-parser": "^0.2.2",
     "modern-normalize": "^2.0.0",
     "open-color": "^1.9.1"
   }

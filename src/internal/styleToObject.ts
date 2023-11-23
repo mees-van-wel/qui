@@ -1,5 +1,4 @@
-import parse from "inline-style-parser";
-import type { Declaration } from "inline-style-parser";
+import { type Declaration, inlineStyleParser } from "./inlineStyleParser";
 
 interface StyleObject {
   [name: string]: string;
@@ -21,7 +20,7 @@ export const styleToObject = (
     return styleObject;
   }
 
-  const declarations = parse(style);
+  const declarations = inlineStyleParser(style);
   const hasIterator = typeof iterator === "function";
 
   declarations.forEach((declaration) => {
